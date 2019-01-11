@@ -1,0 +1,10 @@
+Django==2.1.5
+django-allauth==0.38.0
+django-bootstrap4==0.0.7
+django-cleanup==2.1.0
+django-js-asset==1.1.0
+django-mptt==0.9.1
+Pillow==5.2.0
+psycopg2==2.7.3.2
+python3-openid==3.1.0
+pytz==2017.3

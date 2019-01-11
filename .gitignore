@@ -1,0 +1,9 @@
+venv
+local_settings.py
+prod_settings.py
+*/migrations/*
+.pyc
+.pyc*
+__pycache__/
+static
+db.sqlite3

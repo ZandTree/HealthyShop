@@ -1,0 +1,12 @@
+{% extends 'shop/base.html' %}
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        {% for product in object_list %}
+        <h2><a href="{{product.get_absolute_url}}">Title: {{ product.title }}</a></h2>
+        <p>Price:{{ product.price }}</p>
+        <p>Description: {{ product.description }}</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}

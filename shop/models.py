@@ -1,7 +1,9 @@
 from django.db import models
 from django.urls import reverse
-
+from django.contrib.auth.models import User
 from mptt.models import MPTTModel, TreeForeignKey
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class Category(MPTTModel):
     """Categories of the products"""
@@ -41,5 +43,50 @@ class Product(models.Model):
     def get_absolute_url(self):
         return reverse('shop:product_detail', kwargs={'slug':self.slug})
 
-    class Meta:
-        verbose_name_plural = 'Products'
+
+class Cart(models.Model):
+    user     = models.OneToOneField(User,related_name='cart',on_delete='CASCADE')
+    created  = models.DateTimeField(auto_now_add=True)
+    accepted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return "This is a cart of {}".format(self.user)
+
+class CartItem(models.Model):
+    product = models.ForeignKey(
+                        Product,
+                        related_name='items',
+                        on_delete='CASCADE')
+
+    cart    = models.ForeignKey(
+                        Cart,
+                        related_name='cart_items',
+                        on_delete='CASCADE')
+
+    qty     = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return "Item is {}, amount is {} belongs to cart{}".format(
+                self.product,
+                self.qty,
+                self.cart
+                )
+
+
+
+class Order(models.Model):
+    cart     = models.OneToOneField(Cart,null=True,on_delete=models.SET_NULL)
+    accepted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return "This is an order {}, cart = {}".format(self.id)
+
+@receiver(post_save,sender = User)
+def create_user_cart(sender,instance,created,**kwargs):
+    """As New User created, create Cart"""
+    if created:
+        Cart.objects.create(user=instance)
+@receiver(post_save,sender=User)
+def save_user_cart(sender,instance,**kwargs):
+    """As New User created, save Cart"""
+    instance.cart.save()

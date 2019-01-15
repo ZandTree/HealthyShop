@@ -1,4 +1,13 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
+<div class="row">
+    <!-- here comes a space for products self -->
+    {% block product %}
+
+    {% endblock product %}
+    {% include 'shop/sidebar.html'%}
+
+</div> <!-- <div class="row"> -->
 
 {% endblock content %}

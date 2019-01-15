@@ -18,5 +18,7 @@ def add_prod_to_cart(request,pk):
                 qty  = 2,
                 cart = cart
                 )
+    if not created:
+        user.cart.add(cart_item)            
     cart.cart_items.add(cart_item)
     return redirect('/')

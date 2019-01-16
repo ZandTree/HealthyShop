@@ -45,7 +45,7 @@ class Product(models.Model):
 
 
 class Cart(models.Model):
-    user     = models.OneToOneField(User,related_name='cart',on_delete='CASCADE')
+    user     = models.OneToOneField(User,related_name='cart',on_delete=models.CASCADE)
     created  = models.DateTimeField(auto_now_add=True)
     accepted = models.BooleanField(default=False)
 
@@ -56,12 +56,12 @@ class CartItem(models.Model):
     product = models.ForeignKey(
                         Product,
                         related_name='items',
-                        on_delete='CASCADE')
+                        on_delete=models.CASCADE)
 
     cart    = models.ForeignKey(
                         Cart,
                         related_name='cart_items',
-                        on_delete='CASCADE')
+                        on_delete=models.CASCADE)
 
     qty     = models.PositiveIntegerField(default=1)
 

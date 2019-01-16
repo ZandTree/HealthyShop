@@ -63,7 +63,7 @@ class CartItem(models.Model):
                         related_name='cart_items',
                         on_delete=models.CASCADE)
 
-    qty     = models.PositiveIntegerField(default=1)
+    qty     = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return "Item is {}, amount is {} belongs to cart{}".format(

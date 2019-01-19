@@ -10,7 +10,13 @@ class CategoryMPTTModelAdmin(MPTTModelAdmin):
 
 #example how to attach MPTTModelAdmin ==> admin.site.register(Node, CustomMPTTModelAdmin)
 admin.site.register(Category,CategoryMPTTModelAdmin)
+
+class CartItemAdmin(admin.ModelAdmin):
+    """Products in cart"""
+    list_display =('cart','product','qty')
+
+
 admin.site.register(Product)
 admin.site.register(Cart)
-admin.site.register(CartItem)
+admin.site.register(CartItem,CartItemAdmin)
 admin.site.register(Order)

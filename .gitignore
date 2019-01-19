@@ -1,10 +1,9 @@
 venv
-local_settings.py
 prod_settings.py
-*/migrations/*
+local_settings.py
 .pyc
-.pyc*
-__pycache__/
+__pycache__
+*/migrations/*
 db.sqlite3
 static
 media

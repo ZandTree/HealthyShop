@@ -5,6 +5,7 @@ from mptt.models import MPTTModel, TreeForeignKey
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+
 class Category(MPTTModel):
     """Categories of the products"""
     name = models.CharField(max_length=50,unique=True)
@@ -45,7 +46,7 @@ class Product(models.Model):
 
 
 class Cart(models.Model):
-    user     = models.OneToOneField(User,related_name='cart',on_delete=models.CASCADE)
+    user     = models.ForeignKey(User,related_name='cart',on_delete=models.CASCADE)
     created  = models.DateTimeField(auto_now_add=True)
     accepted = models.BooleanField(default=False)
 
@@ -72,21 +73,19 @@ class CartItem(models.Model):
                 self.cart
                 )
 
-
-
 class Order(models.Model):
-    cart     = models.OneToOneField(Cart,null=True,on_delete=models.SET_NULL)
+    cart     = models.ForeignKey(Cart,on_delete=models.CASCADE)
     accepted = models.BooleanField(default=False)
 
     def __str__(self):
         return "This is an order {}, cart = {}".format(self.id)
-
-@receiver(post_save,sender = User)
-def create_user_cart(sender,instance,created,**kwargs):
-    """As New User created, create Cart"""
-    if created:
-        Cart.objects.create(user=instance)
-@receiver(post_save,sender=User)
-def save_user_cart(sender,instance,**kwargs):
-    """As New User created, save Cart"""
-    instance.cart.save()
+# Doesn't work with ForeignKey rel User < = > Cart
+# @receiver(post_save,sender = User)
+# def create_user_cart(sender,instance,created,**kwargs):
+#     """As New User created, create Cart"""
+#     if created:
+#         Cart.objects.create(user=instance)
+# @receiver(post_save,sender=User)
+# def save_user_cart(sender,instance,**kwargs):
+#     """As New User created, save Cart"""
+#     instance.cart.save()

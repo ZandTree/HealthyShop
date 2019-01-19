@@ -59,12 +59,13 @@ class CartItem(models.Model):
                         related_name='items',
                         on_delete=models.CASCADE)
 
-    cart    = models.ForeignKey(
+    cart = models.ForeignKey(
                         Cart,
                         related_name='cart_items',
                         on_delete=models.CASCADE)
 
-    qty     = models.PositiveIntegerField(default=0)
+    qty = models.PositiveIntegerField(default=0)
+    subtotal_price = models.PositiveIntegerField(default=0,editable=False)
 
     def __str__(self):
         return "Item is {}, amount is {} belongs to cart{}".format(
@@ -72,6 +73,20 @@ class CartItem(models.Model):
                 self.qty,
                 self.cart
                 )
+    def save(self,*args,**kwargs):
+        """ generate price for each product item(price 1st*quantity)"""
+        self.subtotal_price = self.qty * self.product.price
+        super().save(*args,**kwargs)
+
+
+# draft from StackOverFlow
+# @receiver(post_save, sender=CartItem)
+# def update_cart(sender, instance, **kwargs):
+#     subtotal = instance.qty * instance.product.price
+#     instance.cart.total += subtotal
+#     instance.cart.count += instance.quantity
+#     instance.cart.updated = datetime.now()
+
 
 class Order(models.Model):
     cart     = models.ForeignKey(Cart,on_delete=models.CASCADE)
@@ -79,6 +94,7 @@ class Order(models.Model):
 
     def __str__(self):
         return "This is an order {}, cart = {}".format(self.id)
+
 # Doesn't work with ForeignKey rel User < = > Cart
 # @receiver(post_save,sender = User)
 # def create_user_cart(sender,instance,created,**kwargs):

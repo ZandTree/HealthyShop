@@ -4,6 +4,7 @@ from django.views import generic
 from .forms import CartItemForm
 from django.contrib import messages
 from django.conf import settings
+from django.db.models import Count,Sum
 
 class ProductsList(generic.ListView):
     model = Product
@@ -28,16 +29,13 @@ class AddProductToCart(generic.View):
             data = form.cleaned_data
             form = form.save(commit=False)
             product = Product.objects.get(id=pk)
-            # Ищу id product в списке уже имеющихся продуктов в cartitem
             lst_id = CartItem.objects.values_list('product_id',flat=True)
             if pk in lst_id:
                 cart_item = CartItem.objects.get(product_id=pk)
                 messages.add_message(request,settings.MY_INFO,'qty changed')
-                # хочу про-update-ть аттрибут cartitem = qty (quantity)
-                # А он не апдейтится!
                 cart_item.qty = data['qty']
+                cart_item.save()
             else:
-                #здесь  создаётся new object cartitem = ОК              
                 form.product_id = pk
                 form.cart = Cart.objects.get(user=request.user,accepted=False)
                 form.save()
@@ -52,6 +50,13 @@ class CartItemList(generic.ListView):
     template_name='shop/cart.html'
     def get_queryset(self):
         return CartItem.objects.filter(cart__user = self.request.user,cart__accepted=False)
+
+    def get_context_data(self,**kwargs):
+        context = super().get_context_data(**kwargs)
+        qs = CartItem.objects.filter(cart__user = self.request.user,cart__accepted=False)
+        subtotal = qs.aggregate(subtotal=Sum('subtotal_price'))
+        context['subtotal']  = subtotal
+        return context
 
 class RemoveCartItem(generic.View):
     def get(self,request,pk):

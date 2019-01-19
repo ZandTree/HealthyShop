@@ -46,7 +46,7 @@ class Product(models.Model):
 
 
 class Cart(models.Model):
-    user     = models.ForeignKey(User,related_name='cart',on_delete=models.CASCADE)
+    user = models.ForeignKey(User,related_name='cart',on_delete=models.CASCADE)
     created  = models.DateTimeField(auto_now_add=True)
     accepted = models.BooleanField(default=False)
 
@@ -89,7 +89,7 @@ class CartItem(models.Model):
 
 
 class Order(models.Model):
-    cart     = models.ForeignKey(Cart,on_delete=models.CASCADE)
+    cart = models.ForeignKey(Cart,on_delete=models.CASCADE)
     accepted = models.BooleanField(default=False)
 
     def __str__(self):

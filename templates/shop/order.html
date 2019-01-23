@@ -1,0 +1,38 @@
+{% extends 'shop/base.html'%}
+{% load static %}
+{% block content %}
+<div class="colorlib-shop">
+       <div class="container">
+           <div class="row row-pb-md">
+               <div class="col-md-10 col-md-offset-1">
+                   <div class="process-wrap">
+                        <div class="process text-center">
+                           <p><span>02</span></p>
+                           <h3>Checkout</h3>
+                       </div>
+                       <div class="process text-center">
+                           <p><span>03</span></p>
+                           <h3>Order Complete</h3>
+                       </div>
+                   </div>
+               </div>
+           </div>
+           {% include 'base/messages.html'%}
+           <div class="row">
+               <div class="col col-md-6">
+                   <table class="table table-bordered">
+                       <h1>Your Orders:</h1>
+                       <thead>
+                           <tr>
+                                <th>id order</th>
+                                <th>Status Order</th>
+                           </tr>
+                       </thead>
+                       <tbody>
+                           <td><strong>ID: {{order.id}}</strong></td>
+                           <td>{{status}}</td>
+                       </tbody>
+                   </table>
+               </div>
+           </div>
+{% endblock %}

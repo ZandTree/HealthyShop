@@ -44,6 +44,29 @@ class Product(models.Model):
     def get_absolute_url(self):
         return reverse('shop:product_detail', kwargs={'slug':self.slug})
 
+# class ImageGroup(models.Model):
+#     """ Дорабатываю   Upload images in admin,list,detail view"""
+#     product = models.ForeignKey(Product,related_name='images',on_delete=models.CASCADE)
+#     images = models.ImageField(null=True,blank=True,upload_to=img_list)
+
+    # def save(self,*args,**kwargs):
+    #     super().save(*args,**kwargs)
+    #     if self.images:
+    #         img = Image.open(self.images.apth)
+    #         #....check for sizes
+    #         images.save()
+    #
+    # def __str__(self):
+    #     return 'img {}'.format(self.id)
+    # @property
+    # def get_images_url(self):
+    #    путь к папке с картинками
+    #     if self.images:
+    #         return '/media/{}'.format(self.images)
+    #     else:
+    #         если картинки нет, то показать дефолт
+    #         return 'static/img/default.jpg'
+
 
 class Cart(models.Model):
     user = models.ForeignKey(User,related_name='cart',on_delete=models.CASCADE)
@@ -79,6 +102,23 @@ class CartItem(models.Model):
         super().save(*args,**kwargs)
 
 
+
+class Order(models.Model):
+    cart = models.ForeignKey(Cart,related_name='order',on_delete=models.CASCADE)
+    accepted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return "This is an order {}".format(self.id)
+
+
+@receiver(post_save,sender = User)
+def create_user_cart(sender,instance,created,**kwargs):
+    """If New User created, create Cart"""
+    if created:
+        # let op: id card will be change (ForeignKey)
+        Cart.objects.create(user=instance)
+
+
 # draft from StackOverFlow
 # @receiver(post_save, sender=CartItem)
 # def update_cart(sender, instance, **kwargs):
@@ -86,22 +126,3 @@ class CartItem(models.Model):
 #     instance.cart.total += subtotal
 #     instance.cart.count += instance.quantity
 #     instance.cart.updated = datetime.now()
-
-
-class Order(models.Model):
-    cart = models.ForeignKey(Cart,on_delete=models.CASCADE)
-    accepted = models.BooleanField(default=False)
-
-    def __str__(self):
-        return "This is an order {}, cart = {}".format(self.id)
-
-# Doesn't work with ForeignKey rel User < = > Cart
-# @receiver(post_save,sender = User)
-# def create_user_cart(sender,instance,created,**kwargs):
-#     """As New User created, create Cart"""
-#     if created:
-#         Cart.objects.create(user=instance)
-# @receiver(post_save,sender=User)
-# def save_user_cart(sender,instance,**kwargs):
-#     """As New User created, save Cart"""
-#     instance.cart.save()

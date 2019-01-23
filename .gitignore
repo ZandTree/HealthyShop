@@ -4,7 +4,7 @@ local_settings.py
 .pyc
 __pycache__
 */migrations/*
-db.sqlite3
+db.sqite3
 static
 media
 wash.txt

@@ -6,6 +6,17 @@
                     <div id="colorlib-logo"><a href="index.html">User: {{user}}</a></div>
                 </div>
                 <div class="col-xs-10 text-right menu-1">
+                    <form   class="navbar-form navbar-left"
+                            method="GET" action="{% url 'shop:search'%}">
+                        <div class="form-group">
+                          <input  type="text"
+                                  name='q'
+                                  class="form-control"
+                                  placeholder="Search">
+                        </div>
+                        <button type="submit"
+                                class="btn btn-default">Submit</button>
+                    </form>
                     <ul>
                         <li class="active"><a href="{% url 'shop:product_all' %}">Home</a></li>
                         <li class="has-dropdown">
@@ -19,8 +30,19 @@
                             </ul>
                         </li>
                         <li><a href="blog.html">Blog</a></li>
+                        {% if user.is_authenticated %}
+                            <li><a href="/accounts/logout/">Sign Out</a></li>
+                        {% else %}
+                            <li>
+                                <!-- link = trigger modal -->
+                                 <a class="nav-link" href="#" data-toggle="modal" data-target="#loginModal">Login or SignUp</a>
+                            </li>
+                        {% endif %}
                         <li><a href="about.html">About</a></li>
                         <li><a href="contact.html">Contact</a></li>
+                        <!-- just for testing -->
+                        <li><a href="{% url 'shop:create_order' %}">Order</a></li>
+
                         <li><a href="cart.html"><i class="icon-shopping-cart"></i> Cart [0]</a></li>
                     </ul>
                 </div>
@@ -28,3 +50,40 @@
         </div>
     </div>
 </nav>
+
+{# Login modal #}
+<!-- div to display = link modal -->
+<div class="modal fade" id="loginModal">
+    <div class="modal-dialog modal-dialog-centered auth-modal">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Log In</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                {% include 'account/ajax_login.html' %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{# Signup modal #}
+<div class="modal fade" id="signupModal">
+    <div class="modal-dialog modal-dialog-centered auth-modal">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Sign Up</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                {% include 'account/ajax_signup.html' %}
+            </div>
+        </div>
+    </div>
+</div>

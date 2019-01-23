@@ -21,6 +21,7 @@
                    </div>
                </div>
            </div>
+           {% include 'base/messages.html'%}
            <div class="row row-pb-md">
                <div class="col-md-10 col-md-offset-1">
                    <div class="product-name">
@@ -55,15 +56,24 @@
                                    <span class="price">${{ item.product.price }}</span>
                                </div>
                            </div>
+                           <!-- # below = editing the quantity of product in cart -->
                            <div class="one-eight text-center">
                                <div class="display-tc">
-                                   <input type="text" id="quantity" name="quantity"
-                                          class="form-control input-number text-center"
-                                          value="{{item.qty}}"
-                                          min="1"
-                                          max="100">
+                                   <!-- # form added -->
+                                   <form class="" action="{% url 'shop:edit_item' pk=item.id %}" method="post">
+                                       {% csrf_token %}
+                                       <input type="text" id="quantity" name="quantity"
+                                              class="form-control input-number text-center"
+                                              value="{{item.qty}}"
+                                              min="1"
+                                              max="100">
+                                        <button type="submit" class="closed"></button>
+
+                                   </form>
+
                                </div>
                            </div>
+                           <!-- end of edit product qty -->
                            <div class="one-eight text-center">
                                <div class="display-tc">
                                    <span class="price">{{item.subtotal_price}}</span>
@@ -83,7 +93,9 @@
                    <div class="total-wrap">
                        <div class="row">
                            <div class="col-md-8">
-                               <form action="#">
+                               <form action="{% url 'shop:create_order' %}"}"  method="POST">
+
+                                   {% csrf_token %}
                                    <div class="row form-group">
                                        <div class="col-md-9">
                                            <input type="text" name="quantity"
@@ -91,7 +103,7 @@
                                                   placeholder="Your Coupon Number...">
                                        </div>
                                        <div class="col-md-3">
-                                           <input type="submit" value="Apply Coupon"
+                                           <input type="submit" value="Make Order"
                                                   class="btn btn-primary">
                                        </div>
                                    </div>
@@ -102,10 +114,10 @@
                                    <div class="sub">
                                        <p><span>Subtotal:</span> <span>$ {{subtotal.subtotal}}</span></p>
                                        <p><span>Delivery:</span> <span>$0.00</span></p>
-                                       <p><span>Discount:</span> <span>$45.00</span></p>
+                                       <p><span>Discount:</span> <span>$00.00</span></p>
                                    </div>
                                    <div class="grand-total">
-                                       <p><span><strong>Total:</strong></span> <span>$450.00</span>
+                                       <p><span><strong>Total:</strong></span> <span>$00.00</span>
                                        </p>
                                    </div>
                                </div>

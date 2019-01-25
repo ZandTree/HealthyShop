@@ -33,7 +33,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     # custom apps
-    'shop'
+    'shop',
+    'customer'
 ]
 AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of `allauth`
@@ -66,7 +67,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-
+                # my own function = in dir shop dir context_processors func list_categories
+                'shop.context_processors.list_categories',
             ],
         },
     },

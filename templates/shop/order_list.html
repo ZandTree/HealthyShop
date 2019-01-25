@@ -29,10 +29,17 @@
                            </tr>
                        </thead>
                        <tbody>
+                           {% for order in object_list %}
                            <td><strong>ID: {{order.id}}</strong></td>
-                           <td>{{status}}</td>
+                               {% if order.accepted %}
+                                   <td>Status: Accepted</td>
+                                {% else %}
+                                    <td>Status: Not paid yet</td>
+                                {% endif %}    
+                           {% endfor %}
                        </tbody>
                    </table>
                </div>
+
            </div>
-{% endblock %}
+{% endblock content %}

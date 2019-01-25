@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Category,Product,Cart,CartItem,Order
+#from .models import ImageGroup
 
 from mptt.admin import MPTTModelAdmin
 
@@ -14,6 +15,8 @@ admin.site.register(Category,CategoryMPTTModelAdmin)
 class CartItemAdmin(admin.ModelAdmin):
     """Products in cart"""
     list_display =('cart','product','qty')
+
+#admin.site.register(ImageGroup)
 
 
 admin.site.register(Product)

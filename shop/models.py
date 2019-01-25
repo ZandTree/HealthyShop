@@ -20,7 +20,9 @@ class Category(MPTTModel):
 
     class MPTTMeta:
         order_insersion_by = ['name']
-        verbose_name_plural = 'categories'
+
+    class Meta:
+        verbose_name_plural = 'categories'    
 
     def __str__(self):
         return self.name
@@ -43,29 +45,6 @@ class Product(models.Model):
 
     def get_absolute_url(self):
         return reverse('shop:product_detail', kwargs={'slug':self.slug})
-
-# class ImageGroup(models.Model):
-#     """ Дорабатываю   Upload images in admin,list,detail view"""
-#     product = models.ForeignKey(Product,related_name='images',on_delete=models.CASCADE)
-#     images = models.ImageField(null=True,blank=True,upload_to=img_list)
-
-    # def save(self,*args,**kwargs):
-    #     super().save(*args,**kwargs)
-    #     if self.images:
-    #         img = Image.open(self.images.apth)
-    #         #....check for sizes
-    #         images.save()
-    #
-    # def __str__(self):
-    #     return 'img {}'.format(self.id)
-    # @property
-    # def get_images_url(self):
-    #    путь к папке с картинками
-    #     if self.images:
-    #         return '/media/{}'.format(self.images)
-    #     else:
-    #         если картинки нет, то показать дефолт
-    #         return 'static/img/default.jpg'
 
 
 class Cart(models.Model):
@@ -101,11 +80,26 @@ class CartItem(models.Model):
         self.subtotal_price = self.qty * self.product.price
         super().save(*args,**kwargs)
 
-
-
+#
+# ORDER_STATUS_CHOICES = (
+#     #('db','to display')
+#     ('created','Created'),
+#     ('paid','Paid'),
+#     ('shipped','Shipped'),
+#     ('refunded','Refunded')
+# )
 class Order(models.Model):
+    #billing_profile
+    #shipping_address
+    #billing_address
+    # shipping_total
+    # instead of attr = accepted
+    # status = models.CharField(max_length=120,default='created',choices=ORDER_STATUS_CHOICES)
+    #order_id = models.CharField(max_length=120,)
     cart = models.ForeignKey(Cart,related_name='order',on_delete=models.CASCADE)
     accepted = models.BooleanField(default=False)
+    #shipping_total = models.DecimalField(default=1.99,max_digits=100,decimal_places=2)
+    #total = models.DecimalField(default=0.99,max_digits=100,decimal_places=2)
 
     def __str__(self):
         return "This is an order {}".format(self.id)

@@ -1,9 +1,10 @@
+{% load mptt_tags %}
 <nav class="colorlib-nav" role="navigation">
     <div class="top-menu">
         <div class="container">
             <div class="row">
                 <div class="col-xs-2">
-                    <div id="colorlib-logo"><a href="index.html">User: {{user}}</a></div>
+                    <div id="colorlib-logo"><a href="/">{{user}}</a></div>
                 </div>
                 <div class="col-xs-10 text-right menu-1">
                     <form   class="navbar-form navbar-left"
@@ -20,6 +21,23 @@
                     <ul>
                         <li class="active"><a href="{% url 'shop:product_all' %}">Home</a></li>
                         <li class="has-dropdown">
+                            <a href="/">Categories</a>
+                            <ul class="dropdown">
+                            {% recursetree menu_categories %}
+                                <div class="a-node">
+                                    <a  class="dropdown-item"
+                                    href="{% url 'shop:category' slug=node.slug %}">{{node.name}}</a>
+
+                                    {% if not node.is_leaf_node %}
+                                        <div class="a-child">
+                                            <a href="#">{{children}}</a>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                {% endrecursetree %}
+                            </ul>
+                        </li>
+                        <li class="has-dropdown">
                             <a href="shop.html">Shop</a>
                             <ul class="dropdown">
                                 <li><a href="product-detail.html">Product Detail</a></li>
@@ -29,21 +47,27 @@
                                 <li><a href="add-to-wishlist.html">Wishlist</a></li>
                             </ul>
                         </li>
-                        <li><a href="blog.html">Blog</a></li>
-                        {% if user.is_authenticated %}
-                            <li><a href="/accounts/logout/">Sign Out</a></li>
-                        {% else %}
-                            <li>
-                                <!-- link = trigger modal -->
-                                 <a class="nav-link" href="#" data-toggle="modal" data-target="#loginModal">Login or SignUp</a>
+                            {% if user.is_authenticated %}
+                                <li><a href="/accounts/logout/">Sign Out</a></li>
+                            {% else %}
+                                <li>
+                                    <a  href="#" data-toggle="modal" data-target="#loginModal">Login or SignUp</a>
+                                </li>
+                            {% endif %}
+                            <li class="has-dropdown">
+                                {% if user.is_authenticated %}
+                                <a href="#">Profile</a>
+                                <ul class="dropdown">
+                                    <li><a href="{% url 'shop:profile' user.id %}">Cart</a></li>
+                                    <li><a href="{% url 'shop:cart_items' %}">Cart</a></li>
+                                    <li><a href="{% url 'shop:display_order' %}">Order</a></li>
+                                </ul>
+                                {% endif %}
                             </li>
-                        {% endif %}
-                        <li><a href="about.html">About</a></li>
-                        <li><a href="contact.html">Contact</a></li>
-                        <!-- just for testing -->
-                        <li><a href="{% url 'shop:create_order' %}">Order</a></li>
+                            <li><a href="about.html">About</a></li>
+                            <li><a href="contact.html">Contact</a></li>
+                            <li><a href="cart.html"><i class="icon-shopping-cart"></i> Cart [0]</a></li>
 
-                        <li><a href="cart.html"><i class="icon-shopping-cart"></i> Cart [0]</a></li>
                     </ul>
                 </div>
             </div>

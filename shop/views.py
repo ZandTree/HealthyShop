@@ -61,6 +61,8 @@ class CartItemList(LoginRequiredMixin,generic.ListView):
         qs = CartItem.objects.filter(cart__user = self.request.user,cart__accepted=False)
         subtotal = qs.aggregate(subtotal=Sum('subtotal_price'))
         context['subtotal']  = subtotal
+        # will be lated user for CreateOrder
+        context['cart_id'] = Cart.objects.get(user=self.request.user,accepted=False).id
         return context
 
 class EditCartItem(LoginRequiredMixin,generic.View):
@@ -98,8 +100,8 @@ class Search(generic.ListView):
                            (Q(title__icontains=word) for word in query_list))
 
                 )
-        if not result:
-            return Product.objects.filter(category__name__icontains=words)
+        if words and not result:
+            return Product.objects.filter(Q(category__name__icontains=words))
 
         return result
 
@@ -109,20 +111,37 @@ class CreateOrder(LoginRequiredMixin,generic.View):
     create a new one triggered by cart status => accepted False
     """
     def post(self,request):
-        # accepting cart from the user
-        cart = Cart.objects.get(user=request.user,accepted=False)
+        cart = Cart.objects.get(id=request.POST.get('pk'),user=request.user)
         order = Order.objects.create(cart=cart) # per default accepted=False)
         # исходную корзину перевожу в статус accepted = True
         cart.accepted = True
-        print(cart.accepted)
-        # create new cart of the user with status accepted=False
-        new_cart = Cart.objects.create(user=request.user,accepted=False)
-        return render(request,'shop/order.html',{'order':order})
-    # может ли юзер иметь несколько заказов (на основе нескольких корзин со статутсом
-    # accepted = True)?
-    # или так может быть несколько корзин со статусом accepted?
-    # с непонятно: если возможно существование в природе нескольких
-    # заказов, наход-сф в стаутсе accepted = False ==> то искть тогда надо
-    # по id from qs
-    def get(self,request):
-        pass
+        cart.save()
+        # Create a new order
+        new_cart = Cart.objects.create(user=request.user)
+        #return render(request,'shop/order_list.html',{'order':order})
+        return redirect('shop:display_order')
+
+class OrderList(LoginRequiredMixin,generic.ListView):
+    """
+    Can be adjusted through filter according to the order status
+    """
+    # model = Order
+    template_name = 'shop/order_list.html'
+    # context_object_name = 'ord'
+    def get_queryset(self):
+        return Order.objects.filter(cart__user = self.request.user)
+
+class CategoryList(generic.ListView):
+    """
+    List of products based on category
+    """
+    template_name = 'shop/list-product.html'
+    def get_queryset(self):
+        slug = self.kwargs.get('slug')
+        node = Category.objects.get(slug=slug)
+        if Product.objects.filter(category__slug=slug).exists():
+            products = Product.objects.filter(category__slug=slug)
+        else:
+            products = Product.objects.filter(category__slug__in=[x.slug for x in node.get_family()])
+
+        return products

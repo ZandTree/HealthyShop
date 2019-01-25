@@ -1,5 +1,6 @@
 from django import forms
 from .models import CartItem
+#from .models import ImageGroup
 
 
 class CartItemForm(forms.ModelForm):
@@ -18,3 +19,9 @@ class CartItemForm(forms.ModelForm):
         if qty <=0:
             raise forms.ValidationError('quantity should be 1 or more pieces')
         return qty
+
+# idea to upload > 1 file from user
+# class UpLoadImage(forms.ModelForm):
+#     class Meta:
+#         model = ImageGroup
+#         fields = ('product','images')

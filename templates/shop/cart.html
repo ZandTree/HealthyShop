@@ -93,14 +93,17 @@
                    <div class="total-wrap">
                        <div class="row">
                            <div class="col-md-8">
-                               <form action="{% url 'shop:create_order' %}"}"  method="POST">
+                               <form action="{% url 'shop:create_order'%}"}"  method="POST">
 
                                    {% csrf_token %}
                                    <div class="row form-group">
                                        <div class="col-md-9">
-                                           <input type="text" name="quantity"
+                                           <!-- <input type="text" name="quantity"
                                                   class="form-control input-number"
-                                                  placeholder="Your Coupon Number...">
+                                                  placeholder="Your Coupon Number..."> -->
+                                            <input type="number" name="pk"
+                                                    value="{{cart_id}}"
+                                                    hidden >
                                        </div>
                                        <div class="col-md-3">
                                            <input type="submit" value="Make Order"

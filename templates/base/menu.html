@@ -58,7 +58,7 @@
                                 {% if user.is_authenticated %}
                                 <a href="#">Profile</a>
                                 <ul class="dropdown">
-                                    <li><a href="{% url 'shop:profile' user.id %}">Cart</a></li>
+                                    <li><a href="{% url 'customer:view_profile' user.id %}">Your Profile</a></li>
                                     <li><a href="{% url 'shop:cart_items' %}">Cart</a></li>
                                     <li><a href="{% url 'shop:display_order' %}">Order</a></li>
                                 </ul>

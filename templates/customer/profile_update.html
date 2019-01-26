@@ -1,0 +1,35 @@
+{% extends 'base.html'%}
+{% load bootstrap3 %}
+
+{%block content %}
+<h1>Fill in the form to checkout</h1>
+
+<div class="row">
+    {% if messages %}
+           {% for message in messages%}
+               <div class="alert alert-warning alert-dismissable" role="alert">
+                   <button class="close" data-dismiss="alert">
+                       {{message}}
+                       <small><sup>x</sup></small>
+                   </button>
+               </div>
+           {% endfor %}
+       {% endif %}
+   <div class="col-md-6">
+       <form  method="POST" action="">
+           {% csrf_token %}
+           {% bootstrap_form form %}
+           <input type="submit" class="btn btn-primary" value="Confirm profile">
+       </form>
+   </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-md-4">
+        <a href="{% url 'customer:checkMe' user.id %}"><button type="submit" class="btn btn-success btn-md" name="button">Proceed To Pay</button></a>
+    </div>
+   <div class="col-md-4">
+       <a href="{% url 'customer:view_profile' user.id %}"><button type="submit" class="btn btn-success btn-md" name="button">See your billing info </button></a>
+   </div>
+</div>
+{% endblock %}

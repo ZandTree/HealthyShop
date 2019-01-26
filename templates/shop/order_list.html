@@ -26,16 +26,24 @@
                            <tr>
                                 <th>id order</th>
                                 <th>Status Order</th>
+                                <th>Go To Pay</th>
                            </tr>
                        </thead>
                        <tbody>
+                           <h2>{{request.user}}</h2>
                            {% for order in object_list %}
                            <td><strong>ID: {{order.id}}</strong></td>
                                {% if order.accepted %}
                                    <td>Status: Accepted</td>
                                 {% else %}
                                     <td>Status: Not paid yet</td>
-                                {% endif %}    
+                                    <td>
+                                        <button type="submit" class="btn btn-success">
+                                            <a href="{% url 'customer:edit_profile' user.id %}">Checkout</a>
+                                        </button>
+
+                                    </td>
+                                {% endif %}
                            {% endfor %}
                        </tbody>
                    </table>

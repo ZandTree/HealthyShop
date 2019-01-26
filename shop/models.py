@@ -22,7 +22,7 @@ class Category(MPTTModel):
         order_insersion_by = ['name']
 
     class Meta:
-        verbose_name_plural = 'categories'    
+        verbose_name_plural = 'categories'
 
     def __str__(self):
         return self.name
@@ -96,10 +96,12 @@ class Order(models.Model):
     # instead of attr = accepted
     # status = models.CharField(max_length=120,default='created',choices=ORDER_STATUS_CHOICES)
     #order_id = models.CharField(max_length=120,)
-    cart = models.ForeignKey(Cart,related_name='order',on_delete=models.CASCADE)
-    accepted = models.BooleanField(default=False)
     #shipping_total = models.DecimalField(default=1.99,max_digits=100,decimal_places=2)
     #total = models.DecimalField(default=0.99,max_digits=100,decimal_places=2)
+    cart = models.ForeignKey(Cart,related_name='order',on_delete=models.CASCADE)
+    accepted = models.BooleanField(default=False)
+    date = models.DateTimeField(auto_now_add=True )
+
 
     def __str__(self):
         return "This is an order {}".format(self.id)

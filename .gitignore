@@ -5,6 +5,6 @@ local_settings.py
 __pycache__
 db.sqlite3
 */migrations/*
-static
 media
+static
 wash.txt

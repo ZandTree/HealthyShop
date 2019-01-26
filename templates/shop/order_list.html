@@ -19,35 +19,68 @@
            </div>
            {% include 'base/messages.html'%}
            <div class="row">
+               <h1>Your Orders:{{request.user}}</h1>
                <div class="col col-md-6">
-                   <table class="table table-bordered">
-                       <h1>Your Orders:</h1>
-                       <thead>
-                           <tr>
+                   {% for order in object_list %}
+                       {% if not order.accepted %}
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
                                 <th>id order</th>
+                                <th>Date of Creation</th>
                                 <th>Status Order</th>
+                                <th>Total to pay</th>
                                 <th>Go To Pay</th>
+                                <th>Delete Order</th>
+                                <th>Remove to Postpone</th>
                            </tr>
                        </thead>
                        <tbody>
-                           <h2>{{request.user}}</h2>
-                           {% for order in object_list %}
                            <td><strong>ID: {{order.id}}</strong></td>
-                               {% if order.accepted %}
-                                   <td>Status: Accepted</td>
-                                {% else %}
-                                    <td>Status: Not paid yet</td>
-                                    <td>
-                                        <button type="submit" class="btn btn-success">
+                           <td><strong>{{order.date}}</strong></td>
+                            <td>status: Not paid yet</td>
+                            <td><strong>sum...</strong></td>
+                            <td>
+                                <button type="submit" class="btn btn-success active">
                                             <a href="{% url 'customer:edit_profile' user.id %}">Checkout</a>
-                                        </button>
+                                </button>
+                            </td>
+                            <td>
+                                <form action="" method="post">
+                                    {% csrf_token %}
+                                    <input type="number" name="pk" value="{{order.id}}" hidden>
+                                    <button type="submit" class="btn-danger small">Delete</button>
+                                </form>
+                            </td>
+                            <td>
+                                <button type="submit" class="btn-info small">Remove To Postpone</button>
+                            </td>
+                        </tbody>
+                    </table>
 
-                                    </td>
-                                {% endif %}
-                           {% endfor %}
-                       </tbody>
-                   </table>
-               </div>
+                    {% else %}
+                    <h1>History of your orders</h1>
 
-           </div>
+                    <table class="table table-bordered">
+                      <thead>
+                          <tr>
+                              <th>id order</th>
+                               <th>Status Order</th>
+                               <th>Paid at ...date</th>
+                               <th>Shipped at ..date</th>
+
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <td><strong>ID: {{order.id}}</strong></td>
+                            <td>Status: Accepted</td>
+                            <td>Paid</td>
+                            <td>Shipped</td>
+                        </tbody>
+                    </table>
+                    {% endif %}
+
+                {% endfor %}
+            </div>
+    </div>
 {% endblock content %}

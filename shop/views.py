@@ -113,23 +113,32 @@ class CreateOrder(LoginRequiredMixin,generic.View):
     def post(self,request):
         cart = Cart.objects.get(id=request.POST.get('pk'),user=request.user)
         order = Order.objects.create(cart=cart) # per default accepted=False)
-        # исходную корзину перевожу в статус accepted = True
         cart.accepted = True
         cart.save()
-        # Create a new order
         new_cart = Cart.objects.create(user=request.user)
-        #return render(request,'shop/order_list.html',{'order':order})
         return redirect('shop:display_order')
 
 class OrderList(LoginRequiredMixin,generic.ListView):
     """
     Can be adjusted through filter according to the order status
     """
-    # model = Order
+    model = Order
     template_name = 'shop/order_list.html'
-    # context_object_name = 'ord'
+
     def get_queryset(self):
         return Order.objects.filter(cart__user = self.request.user)
+
+    def post(self,request,**kwargs):
+        cart = get_object_or_404(Cart, user=request.user,accepted=True)
+        order = Order.objects.get(
+                id = self.request.POST.get('pk'),
+                accepted=False,
+                cart = cart
+                )
+        cart.delete()
+        order.delete()
+        messages.add_message(request,settings.MY_INFO,'order deleted')
+        return redirect('shop:display_order')
 
 class CategoryList(generic.ListView):
     """

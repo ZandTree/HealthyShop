@@ -11,7 +11,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'd1cl2mq8=aprc+9#r_$h_%&*a02*a)*o2h%@b6@p@r59#q()u#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = True
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -32,6 +32,8 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'photologue',
+    'sortedm2m',
     # custom apps
     'shop',
     'customer'
@@ -60,7 +62,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': ['templates',],
-        'APP_DIRS': True,
+        'APP_DIRS': False, #True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -69,6 +71,11 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 # my own function = in dir shop dir context_processors func list_categories
                 'shop.context_processors.list_categories',
+
+            ],
+            'loaders': [
+                'django.template.loaders.filesystem.Loader',
+                'django.template.loaders.app_directories.Loader',
             ],
         },
     },
@@ -148,8 +155,8 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR,'static'),]
 MY_INFO = 80
 MESSAGE_LEVEL = MY_INFO
 
-
-try:
-    from .local_settings import *
-except ImportError:
-    from .prod_settings import *
+#
+# try:
+#     from .local_settings import *
+# except ImportError:
+#     from .prod_settings import *

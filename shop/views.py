@@ -129,10 +129,11 @@ class OrderList(LoginRequiredMixin,generic.ListView):
         return Order.objects.filter(cart__user = self.request.user)
 
     def post(self,request,**kwargs):
-        cart = get_object_or_404(Cart, user=request.user,accepted=True)
+        cart = get_object_or_404(Cart, user=request.user,accepted=True)        
         order = Order.objects.get(
                 id = self.request.POST.get('pk'),
                 accepted=False,
+                # не излишняя ли здесь проверка на cart?
                 cart = cart
                 )
         cart.delete()

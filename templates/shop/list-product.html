@@ -1,39 +1,55 @@
 {% extends 'shop/base.html' %}
+{% load mptt_tags %}
 {% load static %}
 {% block product %}
-
-<!-- <div class="row"> -->
+<!-- to check how cathegories are rendered LEFT not in menu-->
+<!-- <div class="row">
+    <h3>Categories</h3>
+    <div class="col-md-6">
+        <ul class="root">
+            {% recursetree menu_categories %}
+                <li class="dropdown-item">
+                    <a href="{% url 'shop:category' slug=node.slug %}">{{ node.name }}</a>
+                    {% if not node.is_leaf_node %}
+                        <ul class="children">
+                            <a href="#">{{ children }}</a>
+                        </ul>
+                    {% endif %}
+                </li>
+            {% endrecursetree %}
+        </ul>
+    </div>
+</div> -->
     <div class="col-md-10 col-md-push-2">
         <div class="row row-pb-lg">
-            {% for product in object_list %}
-            <div class="col-md-4 text-center">
-                <div class="product-entry">
-                    <div class="product-img" style="background-image: url({% static 'images/item-5.jpg' %});">
-                        <p class="tag"><span class="new">New</span></p>
-                        <div class="cart">
-                            <p>
-                                <span class="addtocart"><a href="cart.html"><i class="icon-shopping-cart"></i></a></span>
-                                <span><a href="product-detail.html"><i class="icon-eye"></i></a></span>
-                                <span><a href="#"><i class="icon-heart3"></i></a></span>
-                                <span><a href="add-to-wishlist.html"><i class="icon-bar-chart"></i></a></span>
-                            </p>
+            {% for product in products %}
+                <div class="col-md-4 text-center">
+                    <div class="product-entry">
+
+                        <div class="product-img" {% if product.gallery.photos.first %} style="background-image: url({{product.gallery.photos.first.image.url}});" {% else%}
+                        style="background-image: url({% static 'images/item-5.jpg' %});"
+                        {% endif %}>
+                            <p class="tag"><span class="new">New</span></p>
+                            <div class="cart">
+                                <p>
+                                    <span class="addtocart"><a href="cart.html"><i class="icon-shopping-cart"></i></a></span>
+                                    <span><a href="product-detail.html"><i class="icon-eye"></i></a></span>
+                                    <span><a href="#"><i class="icon-heart3"></i></a></span>
+                                    <span><a href="add-to-wishlist.html"><i class="icon-bar-chart"></i></a></span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="desc">
+                            <h3><a href="{{product.get_absolute_url}}">Title: {{ product.title }}</a></h3>
+                            <p class="price"><span>{{product.price}}</span></p>
                         </div>
                     </div>
-                    <div class="desc">
-                        <h3><a href="{{product.get_absolute_url}}">Title: {{ product.title }}</a></h3>
-                        <p class="price"><span>{{product.price}}</span></p>
-                    </div>
                 </div>
-            </div>
             {% empty %}
-            <div class="col-md-4 text-center">
-                <h2>Sorry, no match found</h2>
-
-            </div>
-
+                <div class="col-md-4 text-center">
+                    <h3>No match. Try to search in list of Categories</h3>
+                </div>
             {% endfor %}
-
-
         </div>
         <div class="row">
             <div class="col-md-12">
@@ -63,66 +79,11 @@
                      </div>
                      <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
                          <div class="panel-body">
-                             <ul>
-                                <li><a href="#">Jeans</a></li>
-                                <li><a href="#">T-Shirt</a></li>
-                                <li><a href="#">Jacket</a></li>
-                                <li><a href="#">Shoes</a></li>
-                             </ul>
-                         </div>
-                     </div>
-                 </div>
-                 <div class="panel panel-default">
-                     <div class="panel-heading" role="tab" id="headingTwo">
-                         <h4 class="panel-title">
-                             <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">Women
-                             </a>
-                         </h4>
-                     </div>
-                     <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                         <div class="panel-body">
                             <ul>
-                                <li><a href="#">Jeans</a></li>
-                                <li><a href="#">T-Shirt</a></li>
-                                <li><a href="#">Jacket</a></li>
-                                <li><a href="#">Shoes</a></li>
-                             </ul>
-                         </div>
-                     </div>
-                 </div>
-                 <div class="panel panel-default">
-                     <div class="panel-heading" role="tab" id="headingThree">
-                         <h4 class="panel-title">
-                             <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">Jewelry
-                             </a>
-                         </h4>
-                     </div>
-                     <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-                         <div class="panel-body">
-                            <ul>
-                                <li><a href="#">Jeans</a></li>
-                                <li><a href="#">T-Shirt</a></li>
-                                <li><a href="#">Jacket</a></li>
-                                <li><a href="#">Shoes</a></li>
-                             </ul>
-                         </div>
-                     </div>
-                 </div>
-                 <div class="panel panel-default">
-                     <div class="panel-heading" role="tab" id="headingFour">
-                         <h4 class="panel-title">
-                             <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseThree">Jewelry
-                             </a>
-                         </h4>
-                     </div>
-                     <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
-                         <div class="panel-body">
-                            <ul>
-                                <li><a href="#">Jeans</a></li>
-                                <li><a href="#">T-Shirt</a></li>
-                                <li><a href="#">Jacket</a></li>
-                                <li><a href="#">Shoes</a></li>
-                             </ul>
+                                <li><a href="/sort/?category=Plants">Plants</a></li>
+                                <li><a href="/sort/?category=Furniture">Furniture</a></li>
+                                <li><a href="/sort/?category=Tools">Tools</a></li>
+                            </ul>
                          </div>
                      </div>
                  </div>
@@ -138,13 +99,10 @@
                     <label for="guests">Price from:</label>
                     <div class="form-field">
                       <i class="icon icon-arrow-down3"></i>
-                      <select name="people" id="people" class="form-control">
-                        <option value="#">1</option>
-                        <option value="#">200</option>
-                        <option value="#">300</option>
-                        <option value="#">400</option>
-                        <option value="#">1000</option>
-                      </select>
+                      <!-- <select name="people" id="people" class="form-control"> -->
+                        <a href="/sort/?price1=3">$3</a><br>
+                        <a href="/sort/?price1=59">$59 </a>
+                      <!-- </select> -->
                     </div>
                   </div>
                 </div>
@@ -153,13 +111,10 @@
                     <label for="guests">Price to:</label>
                     <div class="form-field">
                       <i class="icon icon-arrow-down3"></i>
-                      <select name="people" id="people" class="form-control">
-                        <option value="#">2000</option>
-                        <option value="#">4000</option>
-                        <option value="#">6000</option>
-                        <option value="#">8000</option>
-                        <option value="#">10000</option>
-                      </select>
+                      <!-- <select name="people" id="people" class="form-control"> -->
+                        <a href="/sort/?price2=12">12</a><br>
+                        <a href="/sort/?price2=17">17</a>
+                      <!-- </select> -->
                     </div>
                   </div>
                 </div>
@@ -167,35 +122,29 @@
             </form>
             </div>
             <div class="side">
-                <h2>Color</h2>
+                <h2>Availability</h2>
                 <div class="color-wrap">
-                    <p class="color-desc">
-                        <a href="#" class="color color-1"></a>
-                        <a href="#" class="color color-2"></a>
-                        <a href="#" class="color color-3"></a>
-                        <a href="#" class="color color-4"></a>
-                        <a href="#" class="color color-5"></a>
+                    <p>
+                        <a href="/sort/?availability=True" class="color color-1">Avail</a><br>
+                        <!-- <a href="/sort/?availability=True" class="color color-1">True</a> -->
+                        <a href="/sort/?availability=False" class="color color-2">Not Avail</a>
+
                     </p>
                 </div>
             </div>
             <div class="side">
-                <h2>Size</h2>
-                <div class="size-wrap">
-                    <p class="size-desc">
-                        <a href="#" class="size size-1">xs</a>
-                        <a href="#" class="size size-2">s</a>
-                        <a href="#" class="size size-3">m</a>
-                        <a href="#" class="size size-4">l</a>
-                        <a href="#" class="size size-5">xl</a>
-                        <a href="#" class="size size-5">xxl</a>
+                <h2>On Sale</h2>
+                <div class="color-wrap">
+                    <!-- <p class="color-desc"> -->
+                    <p>
+                        <a href="/sort/?sale=True" class="color color-1">On Sale</a><br>
+                        <a href="/sort/?sale=False" class="color color-2">Not On Sale</a>
                     </p>
                 </div>
             </div>
+
         </div>
     </div><!-- <div class="col-md-2 col-md-pull-10"> -->
 
-</div>
-</div>
-<!-- </div> -->
-        {#<p>Description: {{ product.description }}</p>#}
+
 {% endblock product %}

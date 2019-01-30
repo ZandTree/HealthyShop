@@ -77,7 +77,7 @@
                            <div class="one-eight text-center">
                                <div class="display-tc">
                                    <span class="price">{{item.subtotal_price}}</span>
-                               </div>
+                                </div>
                            </div>
                            <div class="one-eight text-center">
                                <div class="display-tc">
@@ -115,7 +115,11 @@
                            <div class="col-md-3 col-md-push-1 text-center">
                                <div class="total">
                                    <div class="sub">
-                                       <p><span>Subtotal:</span> <span>$ {{subtotal.subtotal}}</span></p>
+                                       <p><span>Subtotal:</span>
+                                           {% if subtotal.subtotal %}
+                                            <span>$ {{subtotal.subtotal}}</span>
+                                            {% endif %}
+                                        </p>
                                        <p><span>Delivery:</span> <span>$0.00</span></p>
                                        <p><span>Discount:</span> <span>$00.00</span></p>
                                    </div>

@@ -1,10 +1,7 @@
-{% extends 'base.html'%}
-{% load bootstrap3 %}
-
-{%block content %}
-<h1>Fill in the form to checkout</h1>
-
+{% extends 'base.html' %}
+{% block content %}
 <div class="row">
+    <!-- messages -->
     {% if messages %}
            {% for message in messages%}
                <div class="alert alert-warning alert-dismissable" role="alert">
@@ -15,21 +12,83 @@
                </div>
            {% endfor %}
        {% endif %}
-   <div class="col-md-6">
-       <form  method="POST" action="">
-           {% csrf_token %}
-           {% bootstrap_form form %}
-           <input type="submit" class="btn btn-primary" value="Confirm profile">
-       </form>
-   </div>
-</div>
-<hr>
-<div class="row">
-    <div class="col-md-4">
-        <a href="{% url 'customer:checkMe' user.id %}"><button type="submit" class="btn btn-success btn-md" name="button">Proceed To Pay</button></a>
+    <!-- end messages    -->
+    <h2>Billing Details</h2>
+    <div class="col col-md-7">
+        <form class="colorlib-form" action="" method="post">
+            {% csrf_token %}
+            <div class="col-md-12">
+                <div class="form_group">
+                    {% for field in form %}
+                    <label class="control-labels">{{field.label_tag}}</label>
+                    {{field}}
+                    {% endfor %}
+                </div>
+            </div>
+            <button type="submit" class="btn btn-info">Submit</button>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <div class="radio">
+                      <label><input type="radio" name="optradio">Create an Account? </label>
+                      <label><input type="radio" name="optradio"> Ship to different address</label>
+                    </div>
+                </div>
+            </div>
+
+        </form>
     </div>
-   <div class="col-md-4">
-       <a href="{% url 'customer:view_profile' user.id %}"><button type="submit" class="btn btn-success btn-md" name="button">See your billing info </button></a>
-   </div>
+    <div class="col-md-5">
+        <div class="cart-detail">
+            <h2>Cart Total</h2>
+            <ul>
+                <li>
+                    <span>Subtotal</span> <span>${{subtotal.subtotal}}</span>
+                    <ul>
+                        <li><span>1 x Product Name</span> <span>$99.00</span></li>
+                        <li><span>1 x Product Name</span> <span>$78.00</span></li>
+                    </ul>
+                </li>
+                <li><span>Shipping</span> <span>$0.00</span></li>
+                <li><span>Order Total</span> <span>$180.00</span></li>
+            </ul>
+        </div>
+        <div class="cart-detail">
+            <h2>Payment Method</h2>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <div class="radio">
+                       <label><input type="radio" name="optradio">Direct Bank Tranfer</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <div class="radio">
+                       <label><input type="radio" name="optradio">Check Payment</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <div class="radio">
+                       <label><input type="radio" name="optradio">Paypal</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <div class="checkbox">
+                       <label><input type="checkbox" value="">I have read and accept the terms and conditions</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <p><a href="#" class="btn btn-primary">Place an order</a></p>
+            </div>
+        </div>
+    </div>
 </div>
+
 {% endblock %}

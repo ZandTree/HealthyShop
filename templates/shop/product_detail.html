@@ -1,10 +1,12 @@
 {% extends 'shop/base.html' %}
-{% extends "templates/photologue/gallery_list.html" %}
+<!-- # no need this tag -->
+<!-- { extends "photologue/gallery_list.html"} -->
 {% load static %}
 {% block content %}
 <div class="row row-pb-lg">
     <div class="col-md-10 col-md-offset-1">
         <div class="product-detail-wrap">
+            <!-- start messages -->
                 {% if messages %}
                     {% for msg in messages %}
                         <div class="alert alert-success" role="alert">
@@ -15,18 +17,25 @@
                         </div>
                     {% endfor %}
                 {% endif %}
+                <!-- end messages -->
             <div class="row">
                 <div class="col-md-5">
                     <div class="product-entry">
-                        <div class="product-img" style="background-image: url({% static 'images/item-7.jpg' %});">
+                        <!-- for img in product.gallery.photos.all -->
+                        <div class="product-img"
+                            {% if product.gallery.photos.first %} style="background-image: url({{product.gallery.photos.first.image.url}});" {% else%}
+                            style="background-image: url({% static 'images/item-5.jpg' %});"
+                            {% endif %}>
                             <p class="tag"><span class="sale">Sale</span></p>
-                        </div>
-                        <div class="thumb-nail">
-                            <a href="#" class="thumb-img" style="background-image: url({% static 'images/item-11.jpg'%});"></a>
-                            <a href="#" class="thumb-img" style="background-image: url({% static 'images/item-12.jpg'%});"></a>
-                            <a href="#" class="thumb-img" style="background-image: url({% static 'images/item-16.jpg'%});"></a>
-                        </div>
+                        </div>                      
+                        {% for pic in img_thumbs %}
+                            <div class="thumb-nail">
+                                <a href="#" class="thumb-img"
+                                style="background-image: url({{pic.image.url}});"></a>
+                            </div>
+                        {% endfor %}
                     </div>
+
                 </div>
                 <div class="col-md-7">
                     <div class="desc">
@@ -81,6 +90,7 @@
                                             </form>
                                         </div>
                                     </div>
+
                                 </div> <!-- end div=inputgroup -->
                             </div>
                         </div>
@@ -90,5 +100,6 @@
         </div>
     </div>
 </div>
+
 
 {% endblock content %}

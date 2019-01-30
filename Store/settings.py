@@ -11,7 +11,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'd1cl2mq8=aprc+9#r_$h_%&*a02*a)*o2h%@b6@p@r59#q()u#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+#DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    #photo
     'photologue',
     'sortedm2m',
     # custom apps
@@ -73,6 +74,7 @@ TEMPLATES = [
                 'shop.context_processors.list_categories',
 
             ],
+            # loaders for photologue (and from photologue DOCS)
             'loaders': [
                 'django.template.loaders.filesystem.Loader',
                 'django.template.loaders.app_directories.Loader',
@@ -87,12 +89,12 @@ WSGI_APPLICATION = 'Store.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 #
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 
 
 # Password validation
@@ -152,11 +154,14 @@ EMAIL_USE_TLS = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR,'static'),]
 
+MEDIA_URL='/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+
 MY_INFO = 80
 MESSAGE_LEVEL = MY_INFO
 
-#
-# try:
-#     from .local_settings import *
-# except ImportError:
-#     from .prod_settings import *
+
+try:
+    from .local_settings import *
+except ImportError:
+    from .prod_settings import *

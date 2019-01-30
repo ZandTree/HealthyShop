@@ -18,6 +18,7 @@ class Profile(models.Model):
     last_name = models.CharField(max_length=120,default="")
     company_name = models.CharField(max_length=120,blank=True,default="")
     address = models.CharField(max_length=250,default="")
+    second_address = models.CharField(max_length=250,default="")
     city = models.CharField(max_length=120,default="")
     state = models.CharField(max_length=120,default="")
     postcode = models.CharField(max_length=120,default="")

@@ -41,12 +41,19 @@ class Product(models.Model):
     availability = models.BooleanField(default=True)
     quantity = models.IntegerField(default = 1)
     gallery = models.ForeignKey(Gallery,on_delete=models.SET_NULL,null=True,blank=True)
+    sale = models.BooleanField(default=False)
+    # rating = models.IntegerField(default=1)
+    # vote = models.IntegerField(default=1)
 
     def __str__(self):
         return self.title
-
     def get_absolute_url(self):
         return reverse('shop:product_detail', kwargs={'slug':self.slug})
+
+    # def save(self,*args,**kwargs):
+    #     """ generate rating product item"""
+    #     self.rating = sum_values//self.vote
+    #     super().save(*args,**kwargs)
 
 
 class Cart(models.Model):
@@ -91,15 +98,7 @@ class CartItem(models.Model):
 #     ('refunded','Refunded')
 # )
 class Order(models.Model):
-    #billing_profile
-    #shipping_address
-    #billing_address
-    # shipping_total
-    # instead of attr = accepted
-    # status = models.CharField(max_length=120,default='created',choices=ORDER_STATUS_CHOICES)
-    #order_id = models.CharField(max_length=120,)
-    #shipping_total = models.DecimalField(default=1.99,max_digits=100,decimal_places=2)
-    #total = models.DecimalField(default=0.99,max_digits=100,decimal_places=2)
+
     cart = models.ForeignKey(Cart,related_name='order',on_delete=models.CASCADE)
     accepted = models.BooleanField(default=False)
     date = models.DateTimeField(auto_now_add=True )

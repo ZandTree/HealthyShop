@@ -2,7 +2,6 @@
 
 {% block content %}
 <h1>Profile</h1>
-<!-- # my own -->
 <div class="row">
     {% if messages %}
            {% for message in messages%}
@@ -14,47 +13,45 @@
                </div>
            {% endfor %}
        {% endif %}
-    <div class="col-md-8">
+    <div class="col-md-12">
         <p>Welcome to your profile {{user}}
             <h1>Your Orders:</h1>
-            <table border="2px solid black">
-            <thead>
-                <tr>
-                     <th>Country</th>
-                     <th>First Name</th>
-                     <th>Last Name</th>
-                     <th>Company Name</th>
-                     <th>Address</th>
-                     <th>Towm/City</th>
-                     <th>State/Province</th>
-                     <th>Zip/Postal Code</th>
-                     <th>E-mail</th>
-                     <th>Phone Number</th>
-                </tr>
-            </thead>
-                <td>{{profile.country}}</td>
-                <td>{{profile.first_name}}</td>
-                <td>{{profile.last_name}}</td>
-                <td>{{profile.company}}</td>
-                <td>{{profile.address}}</td>
-                <td>{{profile.city}}</td>
-                <td>{{profile.state}}</td>
-                <td>{{profile.postcode}}</td>
-                <td>{{profile.email}}</td>
-                <td>{{profile.phone}}</td>
-
-
-            <tbody>
-
-            </tbody>
+            <table border="1px solid black" style='margin-bottom:50px;'>
+                <thead>
+                    <tr>
+                         <th>Country</th>
+                         <th>First Name</th>
+                         <th>Last Name</th>
+                         <th>Company Name</th>
+                         <th>Address</th>
+                         <th>Towm/City</th>
+                         <th>State/Province</th>
+                         <th>Zip/Postal Code</th>
+                         <th>E-mail</th>
+                         <th>Phone Number</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <td>{{profile.country}}</td>
+                    <td>{{profile.first_name}}</td>
+                    <td>{{profile.last_name}}</td>
+                    <td>{{profile.company}}</td>
+                    <td>{{profile.address}}</td>
+                    <td>{{profile.city}}</td>
+                    <td>{{profile.state}}</td>
+                    <td>{{profile.postcode}}</td>
+                    <td>{{profile.email}}</td>
+                    <td>{{profile.phone}}</td>
+                </tbody>
             </table>
-
-
     </div>
-    <div class="col-md-4">
-        <button type="submit" class="btn btn-success btn-md"><a href="{% url 'customer:edit_profile' user.id %}">Update profile</a></button>
     </div>
-
-<!-- # шаблон -->
-
+    <div class="row">
+        <div class="col-md-6">
+            <button type="submit" class="btn btn-success btn-md"><a href="" %}">Go To Pay</a></button>
+        </div>
+        <div class="col-md-6">
+            <button type="submit" class="btn btn-danger btn-md"><a href="{% url 'customer:edit_profile' user.id %}">Correct profile</a></button>
+        </div>
+    </div>
 {% endblock %}

@@ -3,8 +3,9 @@ prod_settings.py
 local_settings.py
 .pyc
 __pycache__
+media
+static
+photologue
 db.sqlite3
 */migrations/*
-static
-media
 wash.txt

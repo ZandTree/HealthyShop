@@ -1,8 +1,8 @@
 from django.shortcuts import render,get_object_or_404,redirect
-from .models import Category,Product,Cart,CartItem,Order
+from .models import Category,Product,Cart,CartItem,Order,Comment
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import generic
-from .forms import CartItemForm
+from .forms import CartItemForm,CommentForm,ProductForm
 from django.contrib import messages
 from django.conf import settings
 from django.db.models import Q
@@ -20,6 +20,7 @@ class ProductsList(generic.ListView):
 class ProductDetail(generic.DetailView):
     model = Product
     context_object_name = 'product'
+    template_name = 'shop/product_detail.html'
 
     def get_object(self):
         slug = self.kwargs.get('slug')
@@ -32,7 +33,9 @@ class ProductDetail(generic.DetailView):
         the rest ==> forms photos in thumbnail collection()
         """
         context = super().get_context_data(**kwargs)
-        form = CartItemForm()
+        form_cart = CartItemForm()
+        form_comment = CommentForm()
+        form_score = ProductForm()
         if self.get_object().gallery:
             # main photo
             img_first = self.get_object().gallery.photos.first()
@@ -40,8 +43,40 @@ class ProductDetail(generic.DetailView):
             img_thumbs = self.get_object().gallery.photos.all()[1:]
             context['img_first'] = img_first
             context['img_thumbs'] = img_thumbs
-        context['form'] = form
+        context['form_cart_item'] = form_cart
+        context['form_comment'] = form_comment
+        context['form_score'] = form_score
         return context
+
+# Hoe to use here RedirectView?
+class AddComment(generic.View):
+    def post(self,request,pk):
+        form = CommentForm(request.POST)
+        prod = get_object_or_404(Product,id=pk)
+        if form.is_valid():
+            new_comment = Comment.objects.create(
+                        user=request.user,
+                        product = prod,
+                        comment = request.POST.get('comment')
+                        )
+            new_comment.save()
+            return redirect(prod.get_absolute_url())
+
+class GiveStar(generic.View):
+    def post(self,request,pk):
+        form = ProductForm(request.POST)
+        prod = get_object_or_404(Product,id=pk)
+        if form.is_valid():
+            prod.score = request.POST.get('score')
+            prod.save()
+            return redirect(prod.get_absolute_url())
+
+
+
+
+
+
+
 
 class AddProductToCart(LoginRequiredMixin,generic.View):
     """Add prod to the cart"""

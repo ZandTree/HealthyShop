@@ -13,7 +13,9 @@ urlpatterns = [
     path("create_order/", views.CreateOrder.as_view(), name="create_order"),
     path("display_order/",views.OrderList.as_view(),name='display_order'),
     path("category/<slug:slug>/",views.CategoryProductsList.as_view(),name='category'),
-    path("sort/",views.SortProducts.as_view(),name='sort')
+    path("sort/",views.SortProducts.as_view(),name='sort'),
+    path("add_comment/<int:pk>/",views.AddComment.as_view(),name='add_comment'),
+    path("add_score/<int:pk>/",views.GiveStar.as_view(),name='give_star'),
 
 
 ]

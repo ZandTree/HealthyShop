@@ -1,8 +1,10 @@
 {% extends 'shop/base.html' %}
+{% load bootstrap3 %}
 <!-- # no need this tag -->
 <!-- { extends "photologue/gallery_list.html"} -->
 {% load static %}
 {% block content %}
+
 <div class="row row-pb-lg">
     <div class="col-md-10 col-md-offset-1">
         <div class="product-detail-wrap">
@@ -27,7 +29,7 @@
                             style="background-image: url({% static 'images/item-5.jpg' %});"
                             {% endif %}>
                             <p class="tag"><span class="sale">Sale</span></p>
-                        </div>                      
+                        </div>
                         {% for pic in img_thumbs %}
                             <div class="thumb-nail">
                                 <a href="#" class="thumb-img"
@@ -82,7 +84,7 @@
                                         <div class="col col-12">
                                             <form  action="{% url 'shop:add_cartitem' product.slug product.id %}" method="post">
                                                     {% csrf_token %}
-                                                    {{form}}
+                                                    {% bootstrap_form form_cart_item%}
                                                     <button class="btn btn-primary btn-addtocart" type='submit'>
                                                     <i class="icon-shopping-cart"></i>
                                                     Add to Cart
@@ -98,8 +100,71 @@
                 </div>
             </div>
         </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col col-md-6">
+            <h2>Place for comments</h2>
+            {% if product.product_comments.all %}
+                {% for comment in product.product_comments.all %}
+                <p>{{comment.user}}</p>
+                <p>{{comment.comment}}</p>
+                {% endfor %}
+            {% else %}
+            <h4>No comments yet</h4>
+            {% endif %}
+            <form  action="{% url 'shop:add_comment' pk=product.id %}" method="post">
+                {% csrf_token %}
+                {% bootstrap_form form_comment %}
+                <button type="submit" class="btn btn-success">Comment</button>
+            </form>
+
+        </div>
+        <div class="col col-md-6">
+            <table class="table table-striped" >
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Number</th>
+                        <th>Rating</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{product}}</td>
+                        <td><span class="number-rating">{{product.rating}}</span> </td>
+                        <td>
+                            <div class="stars-outer">
+                                <div id="stars-inner"></div>
+                            </div>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+            <hr>
+            <form  action="{% url 'shop:give_star' pk=product.id %}" method="post">
+                {% csrf_token%}
+                {% bootstrap_form form_score%}
+                <button type="submit" class="btn btn-success">Give a score</button>
+            </form>
+
+        </div>
     </div>
 </div>
 
 
 {% endblock content %}
+{% block js %}
+<script >
+    const rating = {{product.rating}};
+    const starsTotal = 5;
+    document.addEventListener('DOMContentLoaded',getRating);
+    function getRating(){
+            const  starPercentage = rating*100/starsTotal;
+            const starPercentageRound = `${Math.round(starPercentage/10)*10}%`;
+            var el = document.getElementById('stars-inner');
+            el.style.width = starPercentageRound;
+        }
+</script>
+{% endblock%}

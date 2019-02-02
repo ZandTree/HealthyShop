@@ -42,8 +42,15 @@ class Product(models.Model):
     quantity = models.IntegerField(default = 1)
     gallery = models.ForeignKey(Gallery,on_delete=models.SET_NULL,null=True,blank=True)
     sale = models.BooleanField(default=False)
-    # rating = models.IntegerField(default=1)
-    # vote = models.IntegerField(default=1)
+    rating = models.DecimalField(max_digits=2,decimal_places=1,default=0)
+    votes = models.PositiveIntegerField(default=1)
+    score = models.DecimalField(max_digits=2,decimal_places=1,default=0)
+    user_rated = models.OneToOneField(User,
+                related_name='rated_product',
+                on_delete = models.SET_NULL,
+                null = True,
+                blank=True
+                )
 
     def __str__(self):
         return self.title
@@ -52,8 +59,16 @@ class Product(models.Model):
 
     # def save(self,*args,**kwargs):
     #     """ generate rating product item"""
-    #     self.rating = sum_values//self.vote
-    #     super().save(*args,**kwargs)
+    # votes should be +=1 ещё в форме
+    # тут расчёт new_rating = (previous_rating + new_score)/updated_votes
+
+class Comment(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE,related_name='user_comments')
+    product = models.ForeignKey(Product,on_delete=models.CASCADE,related_name='product_comments')
+    comment = models.TextField()
+
+    def __str__(self):
+        return "comment of {}".format(self.comment)
 
 
 class Cart(models.Model):

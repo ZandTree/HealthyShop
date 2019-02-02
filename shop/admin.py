@@ -4,7 +4,7 @@ from django import forms
 from photologue.admin import GalleryAdmin as GalleryAdminDefault
 from photologue.models import Gallery
 
-from .models import Category,Product,Cart,CartItem,Order
+from .models import Category,Product,Cart,CartItem,Order,Comment
 
 from mptt.admin import MPTTModelAdmin
 
@@ -19,7 +19,7 @@ class CartItemAdmin(admin.ModelAdmin):
     list_display =('cart','product','qty')
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('slug','title','category','price','sale','availability','gallery')
+    list_display = ('slug','title','category','rating','price','sale','availability','gallery')
     prepopulated_fields={'slug':('title',)}
 
 class GalleryAdminForm(forms.ModelForm):
@@ -28,6 +28,7 @@ class GalleryAdminForm(forms.ModelForm):
     class Meta:
         model = Gallery
         exclude = ['description']
+
 
 class GalleryAdmin(GalleryAdminDefault):
     form = GalleryAdminForm
@@ -39,3 +40,4 @@ admin.site.register(Product,ProductAdmin)
 admin.site.register(Cart)
 admin.site.register(CartItem,CartItemAdmin)
 admin.site.register(Order)
+admin.site.register(Comment)

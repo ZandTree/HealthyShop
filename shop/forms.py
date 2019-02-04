@@ -28,23 +28,23 @@ class CommentForm(forms.ModelForm):
                             'placeholder':'your comment',
                             })}
         labels = {'comment':'Leave a comment'}
-
-class ProductForm(forms.ModelForm):
-    class Meta:
-        model = Product
-        fields =('score',)
-        widgets = {'score':forms.NumberInput(
-                attrs={'required':False,
-                    'placeholder':'number t/m 5',
-                    'min':0,'max':5,'step':0.5})}
-        labels = {'score':'give your score'}
-
-    def clean_score(self):
-        score = float(self.cleaned_data['score'])
-        if score <= 0 or score >5:
-            raise forms.ValidationError('score should be more than 0 but less or equal 5')
-        return score
-    def save(self,*args,**kwargs):
+#
+# class ProductForm(forms.ModelForm):
+#     class Meta:
+#         model = Product
+#         fields =('score',)
+#         widgets = {'score':forms.NumberInput(
+#                 attrs={'required':False,
+#                     'placeholder':'number t/m 5',
+#                     'min':0,'max':5,'step':0.5})}
+#         labels = {'score':'give your score'}
+#
+#     def clean_score(self):
+#         score = float(self.cleaned_data['score'])
+#         if score <= 0 or score >5:
+#             raise forms.ValidationError('score should be more than 0 but less or equal 5')
+#         return score
+    #def save(self,*args,**kwargs):
         #как сделать здесь  votes  +=1,
         #чтобы потом передать в модель для расчёта и сохранения,
 

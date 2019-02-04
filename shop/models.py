@@ -5,7 +5,39 @@ from mptt.models import MPTTModel, TreeForeignKey
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from photologue.models import Gallery
+from django.utils import timezone
 
+class Star(models.Model):
+    """
+    represent a scale of 5 stars :
+    user can choose between s5 = max score 5, s1 = min score 1
+    """
+    count_s5 = models.PositiveIntegerField(default=0)
+    count_s4 = models.PositiveIntegerField(default=0)
+    count_s3 = models.PositiveIntegerField(default=0)
+    count_s2 = models.PositiveIntegerField(default=0)
+    count_s1 = models.PositiveIntegerField(default=0)
+    result = models.DecimalField(max_digits=2,decimal_places=1)
+    user = models.ForeignKey(User,
+                    related_name='user_stars',
+                    null=True,
+                    blank=True,
+                    on_delete=models.CASCADE
+                    )
+    def __str__(self):
+        return "current rating is {}".format(self.result)
+
+    def save(self,*args,**kwargs):
+        """
+        get amount of votes for each star in range(5)
+        return avarage of stars value
+        """
+        stars = self.count_s5 + self.count_s4 + self.count_s3 + self.count_s2 + self.count_s1
+        if stars == 0:
+            stars = 1
+        sum_stars = (5*self.count_s5+4*self.count_s4+3*self.count_s3+2*self.count_s2+1*self.count_s1)/stars
+        self.result = round(sum_stars,1)
+        super().save(*args,**kwargs)
 
 class Category(MPTTModel):
     """Categories of the products"""
@@ -42,34 +74,26 @@ class Product(models.Model):
     quantity = models.IntegerField(default = 1)
     gallery = models.ForeignKey(Gallery,on_delete=models.SET_NULL,null=True,blank=True)
     sale = models.BooleanField(default=False)
-    rating = models.DecimalField(max_digits=2,decimal_places=1,default=0)
-    votes = models.PositiveIntegerField(default=1)
-    score = models.DecimalField(max_digits=2,decimal_places=1,default=0)
-    user_rated = models.OneToOneField(User,
-                related_name='rated_product',
-                on_delete = models.SET_NULL,
-                null = True,
-                blank=True
-                )
-
+    rating = models.OneToOneField(Star,
+                        blank=True,
+                        null=True,
+                        related_name='prod_rating',
+                        on_delete =models.SET_NULL
+                        )
     def __str__(self):
         return self.title
     def get_absolute_url(self):
         return reverse('shop:product_detail', kwargs={'slug':self.slug})
 
-    # def save(self,*args,**kwargs):
-    #     """ generate rating product item"""
-    # votes should be +=1 ещё в форме
-    # тут расчёт new_rating = (previous_rating + new_score)/updated_votes
-
 class Comment(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE,related_name='user_comments')
     product = models.ForeignKey(Product,on_delete=models.CASCADE,related_name='product_comments')
     comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True) #s,default=timezone.now)
+    changed_ad = models.DateTimeField(auto_now=True) #,default=timezone.now)
 
     def __str__(self):
         return "comment of {}".format(self.comment)
-
 
 class Cart(models.Model):
     user = models.ForeignKey(User,related_name='cart',on_delete=models.CASCADE)
@@ -84,12 +108,10 @@ class CartItem(models.Model):
                         Product,
                         related_name='items',
                         on_delete=models.CASCADE)
-
     cart = models.ForeignKey(
                         Cart,
                         related_name='cart_items',
                         on_delete=models.CASCADE)
-
     qty = models.PositiveIntegerField(default=0)
     subtotal_price = models.PositiveIntegerField(default=0,editable=False)
 
@@ -104,7 +126,6 @@ class CartItem(models.Model):
         self.subtotal_price = self.qty * self.product.price
         super().save(*args,**kwargs)
 
-#
 # ORDER_STATUS_CHOICES = (
 #     #('db','to display')
 #     ('created','Created'),
@@ -113,14 +134,18 @@ class CartItem(models.Model):
 #     ('refunded','Refunded')
 # )
 class Order(models.Model):
-
     cart = models.ForeignKey(Cart,related_name='order',on_delete=models.CASCADE)
     accepted = models.BooleanField(default=False)
     date = models.DateTimeField(auto_now_add=True )
 
-
     def __str__(self):
         return "This is an order {}".format(self.id)
+
+@receiver(post_save,sender=Product)
+def create_rating(sender,instance,created,**kwargs):
+    if created:
+        Product.objects.filter(id=instance.id).update(rating=instance.id)
+        Star.objects.create(id=instance.id)
 
 
 @receiver(post_save,sender = User)
@@ -129,7 +154,6 @@ def create_user_cart(sender,instance,created,**kwargs):
     if created:
         # let op: id card will be change (ForeignKey)
         Cart.objects.create(user=instance)
-
 
 # draft from StackOverFlow
 # @receiver(post_save, sender=CartItem)

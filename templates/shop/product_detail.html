@@ -1,10 +1,7 @@
 {% extends 'shop/base.html' %}
 {% load bootstrap3 %}
-<!-- # no need this tag -->
-<!-- { extends "photologue/gallery_list.html"} -->
 {% load static %}
 {% block content %}
-
 <div class="row row-pb-lg">
     <div class="col-md-10 col-md-offset-1">
         <div class="product-detail-wrap">
@@ -23,7 +20,6 @@
             <div class="row">
                 <div class="col-md-5">
                     <div class="product-entry">
-                        <!-- for img in product.gallery.photos.all -->
                         <div class="product-img"
                             {% if product.gallery.photos.first %} style="background-image: url({{product.gallery.photos.first.image.url}});" {% else%}
                             style="background-image: url({% static 'images/item-5.jpg' %});"
@@ -37,7 +33,6 @@
                             </div>
                         {% endfor %}
                     </div>
-
                 </div>
                 <div class="col-md-7">
                     <div class="desc">
@@ -118,7 +113,6 @@
                 {% bootstrap_form form_comment %}
                 <button type="submit" class="btn btn-success">Comment</button>
             </form>
-
         </div>
         <div class="col col-md-6">
             <table class="table table-striped" >
@@ -132,23 +126,53 @@
                 <tbody>
                     <tr>
                         <td>{{product}}</td>
-                        <td><span class="number-rating">{{product.rating}}</span> </td>
+                        <td><span class="number-rating">{{product.rating.result}}</span> </td>
                         <td>
                             <div class="stars-outer">
                                 <div id="stars-inner"></div>
                             </div>
                         </td>
                     </tr>
-
                 </tbody>
             </table>
             <hr>
-            <form  action="{% url 'shop:give_star' pk=product.id %}" method="post">
-                {% csrf_token%}
-                {% bootstrap_form form_score%}
-                <button type="submit" class="btn btn-success">Give a score</button>
-            </form>
-
+            <!-- <form  action="" method="post"> -->
+            <a href="{% url 'shop:give_star' product.slug 5 %}">
+                    <button type="submit" class="btn btn-success">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    </button>
+                </a><br>
+                 <a href="{% url 'shop:give_star' product.slug 4 %}">
+                     <button type="submit" class="btn btn-success">
+                     <i class="fas fa-star"></i>
+                     <i class="fas fa-star"></i>
+                     <i class="fas fa-star"></i>
+                     <i class="fas fa-star"></i>
+                     </button>
+                 </a><br>
+                 <a href="{% url 'shop:give_star' product.slug 3 %}">
+                     <button type="submit" class="btn btn-success">
+                     <i class="fas fa-star"></i>
+                     <i class="fas fa-star"></i>
+                     <i class="fas fa-star"></i>
+                     </button>
+                 </a><br>
+                 <a href="{% url 'shop:give_star' product.slug 2 %}">
+                     <button type="button" class="btn btn-success">
+                     <i class="fas fa-star"></i>
+                     <i class="fas fa-star"></i>
+                     </button><br>
+                 </a>
+                 <a href="{% url 'shop:give_star' product.slug 1 %}">
+                     <button type="submit" class="btn btn-success">
+                     <i class="fas fa-star"></i>
+                     </button>
+                 </a><br>
+            <!-- </form> -->
         </div>
     </div>
 </div>
@@ -157,7 +181,7 @@
 {% endblock content %}
 {% block js %}
 <script >
-    const rating = {{product.rating}};
+    const rating = {{product.rating.result}};
     const starsTotal = 5;
     document.addEventListener('DOMContentLoaded',getRating);
     function getRating(){

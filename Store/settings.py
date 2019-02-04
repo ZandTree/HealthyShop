@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'sortedm2m',
     # custom apps
     'shop',
-    'customer'
+    'customer',
+    'country'
 ]
 AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of `allauth`

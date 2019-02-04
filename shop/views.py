@@ -1,8 +1,8 @@
 from django.shortcuts import render,get_object_or_404,redirect
-from .models import Category,Product,Cart,CartItem,Order,Comment
+from .models import Category,Product,Cart,CartItem,Order,Comment,Star
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import generic
-from .forms import CartItemForm,CommentForm,ProductForm
+from .forms import CartItemForm,CommentForm
 from django.contrib import messages
 from django.conf import settings
 from django.db.models import Q
@@ -35,7 +35,6 @@ class ProductDetail(generic.DetailView):
         context = super().get_context_data(**kwargs)
         form_cart = CartItemForm()
         form_comment = CommentForm()
-        form_score = ProductForm()
         if self.get_object().gallery:
             # main photo
             img_first = self.get_object().gallery.photos.first()
@@ -45,10 +44,9 @@ class ProductDetail(generic.DetailView):
             context['img_thumbs'] = img_thumbs
         context['form_cart_item'] = form_cart
         context['form_comment'] = form_comment
-        context['form_score'] = form_score
         return context
 
-# Hoe to use here RedirectView?
+
 class AddComment(generic.View):
     def post(self,request,pk):
         form = CommentForm(request.POST)
@@ -63,19 +61,24 @@ class AddComment(generic.View):
             return redirect(prod.get_absolute_url())
 
 class GiveStar(generic.View):
-    def post(self,request,pk):
-        form = ProductForm(request.POST)
-        prod = get_object_or_404(Product,id=pk)
-        if form.is_valid():
-            prod.score = request.POST.get('score')
-            prod.save()
-            return redirect(prod.get_absolute_url())
-
-
-
-
-
-
+    def get(self,request,slug,star):
+        product = Product.objects.get(slug=slug)
+        pk_star = Star.objects.get(id=product.pk)
+        user = request.user
+        template_name = 'shop/product_detail.html'
+        if int(star) == 5:
+            pk_star.count_s5 +=1
+        elif int(star) == 4:
+            pk_star.count_s4 +=1
+        elif int(star) == 3:
+            pk_star.count_s3 += 1
+        elif int(star) == 2:
+            pk_star.count_s2 += 1
+        elif int(star) == 1:
+            pk_star.count_s1 +=1
+        pk_star.user = user
+        pk_star.save()
+        return redirect(product.get_absolute_url())
 
 
 class AddProductToCart(LoginRequiredMixin,generic.View):

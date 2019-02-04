@@ -25,6 +25,13 @@ class ProfileUpdate(LoginRequiredMixin,generic.UpdateView):
     def form_valid(self,form):
         messages.add_message(self.request,settings.MY_INFO,'profile updated')
         return super().form_valid(form)
+    # for debug     
+    def form_invalid(self,form):
+        messages.add_message(self.request,settings.MY_INFO,'something went wrong')
+        print(form.instance.country)
+        print(form.instance.state)
+        print(form.instance.city)
+        return super().form_invalid(form)
 
     def get_initial(self):
         return {'email': self.request.user.email}

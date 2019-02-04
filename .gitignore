@@ -4,8 +4,7 @@ local_settings.py
 .pyc
 __pycache__
 media
-static
-photologue
+images
 db.sqlite3
 */migrations/*
 wash.txt

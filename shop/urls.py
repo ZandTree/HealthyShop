@@ -16,6 +16,7 @@ urlpatterns = [
     path("sort/",views.SortProducts.as_view(),name='sort'),
     path("add_comment/<int:pk>/",views.AddComment.as_view(),name='add_comment'),
     path("give_star/<slug:slug>/<int:star>/",views.GiveStar.as_view(),name='give_star'),
+    path("checkout/<int:pk>/", views.CheckOut.as_view(), name="checkout"),
 
 
 ]

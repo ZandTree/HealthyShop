@@ -28,14 +28,15 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     # third patry
     'mptt',
-    'bootstrap3',
+    # 'bootstrap3',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     #photo
     'photologue',
     'sortedm2m',
-    # custom apps
+    # custom apps,
+    'rest_framework',
     'shop',
     'customer',
     'country'
@@ -135,7 +136,7 @@ SITE_ID =1
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_UNIQUE = True
-ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_EMAIL_VERIFICATION = "optional"
 ACCOUNT_USERNAME_BLACKLIST = ["admin", "administrator", "moderator"]
 ACCOUNT_USERNAME_MIN_LENGTH = 4
 ACCOUNT_LOGOUT_REDIRECT_URL ="/"

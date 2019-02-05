@@ -32,8 +32,6 @@
                                 <th>(Sub)Total to pay(before shipping costs)</th>
                                 <th>Go To Pay</th>
                                 <th>Delete Order</th>
-
-
                            </tr>
                        </thead>
                        <tbody>
@@ -42,18 +40,15 @@
                             <td>status: Not paid yet</td>
                             <td><strong>sum...</strong></td>
                             <td>
-                                <button type="submit" class="btn btn-success active">
-                                            <a href="{% url 'customer:edit_profile' user.id %}">Checkout</a>
-                                </button>
+                                <a href="{% url 'shop:checkout' pk=order.id %}" class="btn btn-success">Go To Pay</a>
                             </td>
                             <td>
-                                <form action="" method="post">
+                                <form action="#" method="post">
                                     {% csrf_token %}
                                     <input type="number" name="pk" value="{{order.id}}" hidden>
                                     <button type="submit" class="btn btn-danger small">Delete</button>
                                 </form>
                             </td>
-
 
                         </tbody>
                     </table>

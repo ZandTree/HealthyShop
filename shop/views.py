@@ -1,5 +1,7 @@
 from django.shortcuts import render,get_object_or_404,redirect
 from .models import Category,Product,Cart,CartItem,Order,Comment,Star
+from customer.models import Profile
+from customer.forms import ProfileForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import generic
 from .forms import CartItemForm,CommentForm
@@ -225,7 +227,7 @@ class OrderList(LoginRequiredMixin,generic.ListView):
     """
     model = Order
     template_name = 'shop/order_list.html'
-
+    # def price $
     def get_queryset(self):
         return Order.objects.filter(cart__user = self.request.user)
 
@@ -257,3 +259,14 @@ class CategoryProductsList(generic.ListView):
             # display all produs from (root start)
             products = Product.objects.filter(category__slug__in=[x.slug for x in node.get_family()])
         return products
+
+class CheckOut(generic.View):
+    """Payment"""
+    def get(self, request, pk):
+        # order = Order.objects.filter(
+        #     id=pk,
+        #     cart__user=request.user,
+        #     accepted=False
+        # ).aggregate(Sum('cart__cartitem__price_sum'))
+        form = ProfileForm(instance=Profile.objects.get(user=request.user))
+        return render(request, 'shop/checkout.html', {"form": form}) #"order": order,

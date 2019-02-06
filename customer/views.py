@@ -8,17 +8,17 @@ from .forms import ProfileForm
 
 
 class ProfileDetail(LoginRequiredMixin, DetailView):
-    """Вывод профиля пользователя"""
+    """Current Profile"""
     model = Profile
     context_object_name = 'profile'
-    template_name = 'profiles/profile_detail.html'
+    template_name = 'customer/profile_detail.html'
 
 
 class ProfileUpdate(LoginRequiredMixin, UpdateView):
     """Редактирование профиля"""
     form_class = ProfileForm
     model = Profile
-    template_name = "profiles/profile_update.html"
+    template_name = "customer/profile_update.html"
 
     def form_valid(self, form):
         return super().form_valid(form)

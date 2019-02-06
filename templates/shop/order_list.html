@@ -29,7 +29,7 @@
                                 <th>id order</th>
                                 <th>Date of Creation</th>
                                 <th>Status Order</th>
-                                <th>(Sub)Total to pay(before shipping costs)</th>
+                                <th>To pay (before shipping costs)</th>
                                 <th>Go To Pay</th>
                                 <th>Delete Order</th>
                            </tr>
@@ -38,7 +38,7 @@
                            <td><strong>ID: {{order.id}}</strong></td>
                            <td><strong>{{order.date}}</strong></td>
                             <td>status: Not paid yet</td>
-                            <td><strong>sum...</strong></td>
+                            <td><strong>$ {{sub.sub}}</strong></td>
                             <td>
                                 <a href="{% url 'shop:checkout' pk=order.id %}" class="btn btn-success">Go To Pay</a>
                             </td>
@@ -52,9 +52,12 @@
 
                         </tbody>
                     </table>
+                    {% endif%}
+                    {% endfor %}
 
-                    {% else %}
+                    {% if order_hx %}
                     <h1>History of your orders</h1>
+                    {% for order in order_hx %}        
 
                     <table class="table table-bordered">
                       <thead>
@@ -73,9 +76,9 @@
                             <td>Shipped</td>
                         </tbody>
                     </table>
-                    {% endif %}
+                    {% endfor %}
+                {% endif %}
 
-                {% endfor %}
             </div>
     </div>
 {% endblock content %}

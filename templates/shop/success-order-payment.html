@@ -1,0 +1,18 @@
+{% extends 'base.html'%}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-10 col-md-offset-1 text-center">
+        <span class="icon"><i class="icon-shopping-cart"></i></span>
+        <h2>Thank you for purchasing, Your order is complete</h2>
+        <h3>Order number: {{order.id}}</h3>
+        <h3>Date of payment: {{order.date}}</h3>
+        <h4>false? {{order.accepted}}</h4>
+
+        <p>
+            <a href="{% url 'shop:product_all' %}"class="btn btn-primary">Home</a>
+            <a href="{% url 'shop:product_all' %}"class="btn btn-primary btn-outline">Continue Shopping</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

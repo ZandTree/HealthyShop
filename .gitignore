@@ -4,5 +4,8 @@ local_settings.py
 .pyc
 __pycache__
 images
+media
+photologue
+sass
 */migrations/*
 wash.txt

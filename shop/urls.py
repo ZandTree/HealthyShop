@@ -17,6 +17,9 @@ urlpatterns = [
     path("add_comment/<int:pk>/",views.AddComment.as_view(),name='add_comment'),
     path("give_star/<slug:slug>/<int:star>/",views.GiveStar.as_view(),name='give_star'),
     path("checkout/<int:pk>/", views.CheckOut.as_view(), name="checkout"),
+    path("go-to-pay/<int:pk>/", views.GoToPayOrder.as_view(), name="go_to_pay"),
+    path("payment-done/<int:pk>/", views.PaymentDone.as_view(), name="payment_done"),
+
 
 
 ]

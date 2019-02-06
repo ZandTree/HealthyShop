@@ -8,8 +8,8 @@ urlpatterns = [
     path('',include('shop.urls')),
     path('profile/',include('customer.urls')),
     path('accounts/', include('allauth.urls')),
-#     path('photologue/', include('photologue.urls', namespace='photologue'))
-#
+    path('photologue/', include('photologue.urls', namespace='photologue'))
+
  ]
 
 if settings.DEBUG:

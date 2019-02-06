@@ -115,12 +115,11 @@ class CartItemList(LoginRequiredMixin,generic.ListView):
 
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
-        qs = CartItem.objects.filter(cart__user = self.request.user,cart__accepted=False)
-        subtotal = qs.aggregate(subtotal=Sum('subtotal_price'))
-        context['subtotal']  = subtotal
-        # extra avail variable for CreateOrder
         context['cart_id'] = Cart.objects.get(user=self.request.user,accepted=False).id
+        subtotal = self.get_queryset().aggregate(subtotal=Sum('subtotal_price'))
+        context['subtotal']  = subtotal
         return context
+
 
 class EditCartItem(LoginRequiredMixin,generic.View):
     """Edit item in cart"""
@@ -222,23 +221,29 @@ class CreateOrder(LoginRequiredMixin,generic.View):
         return redirect('shop:display_order')
 
 class OrderList(LoginRequiredMixin,generic.ListView):
-    """
-    Can be adjusted through filter according to the order status
-    """
+    """Can be adjusted through filter according to the order status """
     model = Order
     template_name = 'shop/order_list.html'
-    # def price $
+
     def get_queryset(self):
-        return Order.objects.filter(cart__user = self.request.user)
+        return Order.objects.filter(cart__user = self.request.user,accepted=False)
+
+    def get_context_data(self,*args,**kwargs):
+        context = super().get_context_data(*args,**kwargs)
+        sub = self.get_queryset().aggregate(sub=Sum('cart__cart_items__subtotal_price'))
+        order_hx = Order.objects.filter(cart__user = self.request.user,accepted=True)
+        context['sub'] = sub
+        context['order_hx'] = order_hx
+        return context
 
     def post(self,request,**kwargs):
-        cart = get_object_or_404(Cart, user=request.user,accepted=True)
+        """ user can delete order """
         order = Order.objects.get(
-                id = self.request.POST.get('pk'),
+                id = request.POST.get('pk'),
                 accepted=False,
-                # не излишняя ли здесь проверка на cart?
-                cart = cart
+                cart__user = request.user
                 )
+        cart = get_object_or_404(Cart, user=request.user,accepted=True)
         cart.delete()
         order.delete()
         messages.add_message(request,settings.MY_INFO,'order deleted')
@@ -262,11 +267,34 @@ class CategoryProductsList(generic.ListView):
 
 class CheckOut(generic.View):
     """Payment"""
+
     def get(self, request, pk):
-        # order = Order.objects.filter(
-        #     id=pk,
-        #     cart__user=request.user,
-        #     accepted=False
-        # ).aggregate(Sum('cart__cartitem__price_sum'))
+        order = Order.objects.get(
+             id=pk,
+             cart__user=request.user,
+             accepted=False
+        )
+        sum_order =Order.objects.filter(
+             id=pk,
+             cart__user=request.user,
+             accepted=False
+        ).aggregate(sum_order=Sum('cart__cart_items__subtotal_price'))
         form = ProfileForm(instance=Profile.objects.get(user=request.user))
-        return render(request, 'shop/checkout.html', {"form": form}) #"order": order,
+        return render(request,
+                'shop/checkout.html',
+                {"form": form,"order":order,'sum_order':sum_order})
+
+class GoToPayOrder(generic.View):
+    """user is going to pay"""
+    def get(self, request, pk):
+        order = Order.objects.get(id=int(pk), cart__user=request.user)
+        order.accepted = True
+        order.save()
+        url = '/payment-done/{}/'.format(pk)
+        return redirect(url)
+
+class PaymentDone(generic.DetailView):
+    """Payment done"""
+    model = Order
+    context_object_name = 'order'
+    template_name = 'shop/success-order-payment.html'

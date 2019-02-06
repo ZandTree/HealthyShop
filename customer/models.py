@@ -7,6 +7,7 @@ from django.urls import reverse
 from country.models import Country, State, City
 
 
+
 class Profile(models.Model):
     """Профиль пользователя"""
     user = models.OneToOneField(
@@ -20,20 +21,23 @@ class Profile(models.Model):
     country = models.ForeignKey(
         Country,
         verbose_name='Страна',
-        default="1",
+        #default="1",
+        blank =True,
         null=True,
         on_delete=models.SET_NULL)
     state = models.ForeignKey(
         State,
         verbose_name='Республика/Штат',
-        default="1",
+        #default="1",
         null=True,
+        blank=True,
         on_delete=models.SET_NULL)
     city = models.ForeignKey(
         City,
         verbose_name='Город',
-        default="1",
+        #default="1",
         null=True,
+        blank=True,
         on_delete=models.SET_NULL)
     address = models.CharField("Адрес", max_length=250, default="")
     second_address = models.CharField("second_address", max_length=250, default="")

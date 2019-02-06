@@ -28,7 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     # third patry
     'mptt',
-    # 'bootstrap3',
+    'bootstrap3',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',

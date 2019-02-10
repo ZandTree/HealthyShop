@@ -95,10 +95,20 @@ class Comment(models.Model):
     def __str__(self):
         return "comment of {}".format(self.comment)
 
+class CreateCartManager(models.Manager):
+    def new_cart(self,user=None):
+        user_obj = None
+        if user is not None:
+            if user.is_authenticated:
+                user_obj = user
+        return self.model.objects.create(user=user_obj)
 class Cart(models.Model):
-    user = models.ForeignKey(User,related_name='cart',on_delete=models.CASCADE)
-    created  = models.DateTimeField(auto_now_add=True)
+    #user = models.ForeignKey(User,related_name='cart',on_delete=models.CASCADE)
+    user = models.ForeignKey(User,related_name='cart',null=True,blank=True,on_delete=models.SET_NULL)
     accepted = models.BooleanField(default=False)
+    created  = models.DateTimeField(auto_now_add=True)
+    #updated = models.DateTimeField(auto_now=True)
+    objects = CreateCartManager()
 
     def __str__(self):
         return "This is a cart of {}".format(self.user)
@@ -134,6 +144,9 @@ class CartItem(models.Model):
 #     ('refunded','Refunded')
 # )
 class Order(models.Model):
+    #order_ident = models.CharField(max_length=120,blank=True) #AB3245
+    shipping_total = models.DecimalField(default=0.00,max_digits=100,decimal_places=2)
+    total = models.DecimalField(default=0.00,max_digits=100,decimal_places=2)
     cart = models.ForeignKey(Cart,related_name='order',on_delete=models.CASCADE)
     accepted = models.BooleanField(default=False)
     date = models.DateTimeField(auto_now_add=True )

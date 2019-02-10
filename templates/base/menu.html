@@ -66,8 +66,10 @@
                                 </ul>
                                 {% endif %}
                             </li>
-                            <li><a href="about.html">About</a></li>
-                            <li><a href="contact.html">Contact</a></li>
+                            <li><a href="{% url 'shop:sessions'%}">Session Info</a></li>
+                            <li><a href="{% url 'shop:before_checkout' %}">BeforeCheck</a></li>
+                            <!-- <li><a href="about.html">About</a></li> -->
+                            <!-- <li><a href="contact.html">Contact</a></li> -->
                             <li><a href="cart.html"><i class="icon-shopping-cart"></i> Cart [0]</a></li>
 
                     </ul>

@@ -1,5 +1,10 @@
 from django import forms
-from .models import Profile
+from .models import Profile,Guest_Profile
+
+class GuestForm(forms.ModelForm):
+    class Meta:
+        model = Guest_Profile
+        fields = ('email',)
 
 class ProfileForm(forms.ModelForm):
     class Meta:

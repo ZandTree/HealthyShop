@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load bootstrap3 %}
+<h4>What would you like to do?</h4>
+<div class="row">
+    <div class="col-md-6">
+        <h3><a  href="#" data-toggle="modal" data-target="#loginModal">Login or SignUp</a></h3>
+    </div>
+    <div class="col-md-6">
+        <h3>Go further as a guest?</h3>
+        <form class="" action="" method="post">
+            {% csrf_token %}
+            {% bootstrap_form guest_form%}
+            <button type="submit" class="btn btn-success">Go further</button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+{% endblock %}

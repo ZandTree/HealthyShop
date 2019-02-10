@@ -1,6 +1,6 @@
 import os
 import sys
-
+# from here to there == standard inleiding for all not native files
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.dirname("../" + __file__))
 sys.path.append(BASE_DIR)
@@ -9,6 +9,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'store.settings'
 import django
 
 django.setup()
+# to there
 
 from django.core.management.base import BaseCommand
 from country.models import Country, State, City
@@ -36,6 +37,8 @@ class Command(BaseCommand):
         print("Все штаты добавлены")
 
     def add_cities(self):
+        # for test reason only 50 cities;
+        # for production ==> 100%
         for city in cities[:51]:
             City.objects.create(id=city[0], name=city[1], state_id=city[2])
         print("Все города добавлены")

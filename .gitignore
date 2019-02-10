@@ -3,9 +3,10 @@ prod_settings.py
 local_settings.py
 .pyc
 __pycache__
-images
-media
+payment.py
 photologue
+images
+static
 sass
 */migrations/*
 wash.txt

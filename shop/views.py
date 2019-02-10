@@ -1,17 +1,38 @@
 from django.shortcuts import render,get_object_or_404,redirect
-from .models import Category,Product,Cart,CartItem,Order,Comment,Star
+from .models import (Category,Product,Cart,CartItem,Order,Comment,Star)
 from customer.models import Profile
-from customer.forms import ProfileForm
+from customer.forms import ProfileForm,GuestForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import generic
 from .forms import CartItemForm,CommentForm
 from django.contrib import messages
 from django.conf import settings
-from django.db.models import Q
-from django.db.models import Sum
+from django.db.models import Q,Sum
 import operator
 from functools import reduce
+# for vue.js
+#from django.http import JsonResponse
+#from .serializers import ProductSer, CatSer
 
+
+class ShowSession(generic.View):
+    def get(self,request):
+        template_name = 'shop/show_sessions.html'
+        cart_id = self.request.session.get('cart_id',None)
+        qs= Cart.objects.filter(id=cart_id)
+        if qs:
+            cart = qs.first()
+            print('cart exists')
+            #print(request.user.is_authenticated()) #TypeError: 'bool' object is not callable
+            if self.request.user.is_authenticated and cart.user is None:
+                cart.user = request.user
+                cart.save()
+        else:
+            cart = Cart.objects.new_cart(user=request.user)
+            self.request.session['cart_id'] = cart.id
+            print('cart id',cart.id)
+            print(self.request.session['cart_id'])
+        return render(request,template_name)
 
 class ProductsList(generic.ListView):
     model = Product
@@ -89,7 +110,11 @@ class AddProductToCart(LoginRequiredMixin,generic.View):
         qty = request.POST.get('qty',None)
         if qty is not None and int(qty) > 0:
             try:
-                item = CartItem.objects.get(cart__user=request.user,product_id=pk)
+                item = CartItem.objects.get(
+                    cart__user=request.user,
+                    product_id=pk,
+                    cart__accepted = False
+                    )
                 item.qty += int(qty)
                 messages.add_message(request,settings.MY_INFO,'qty changed')
 
@@ -183,7 +208,20 @@ class SortProducts(generic.View):
             sale = Q()
             sale &= Q(sale=sal)
             filt.append(sale)
+
         sort_prods = Product.objects.filter(*filt)
+        # in case vue.js
+        # sort = Product.objects.filter(*filt)
+        # to serialize only caterg = parent__isnull+True
+        # category_ser = CatSer(Category.objects.filter(parent__isnull=True), many=True)
+        # print(sort)
+        # serializers = ProductSer(sort, many=True)
+        # return JsonResponse(
+        #     {
+        #         "products": serializers.data,
+        #         "category": category_ser.data
+        #      },
+        #     safe=False)
         return render(request, "shop/list-product.html", {"products": sort_prods})
 
 
@@ -219,6 +257,13 @@ class CreateOrder(LoginRequiredMixin,generic.View):
         cart.save()
         new_cart = Cart.objects.create(user=request.user)
         return redirect('shop:display_order')
+
+class BeforeCheck(generic.View):
+    def get(self,request):
+        template = 'shop/before_checkout.html'
+        guest_form = GuestForm
+        return render(request,template,{'guest_form':guest_form})
+
 
 class OrderList(LoginRequiredMixin,generic.ListView):
     """Can be adjusted through filter according to the order status """

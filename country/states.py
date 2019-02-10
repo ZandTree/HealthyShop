@@ -1,3 +1,4 @@
+# tuple(id,'name of the state',id country)
 states = [
     (1, 'Andaman and Nicobar Islands', 101),
     (2, 'Andhra Pradesh', 101),

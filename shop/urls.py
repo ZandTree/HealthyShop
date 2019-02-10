@@ -19,6 +19,8 @@ urlpatterns = [
     path("checkout/<int:pk>/", views.CheckOut.as_view(), name="checkout"),
     path("go-to-pay/<int:pk>/", views.GoToPayOrder.as_view(), name="go_to_pay"),
     path("payment-done/<int:pk>/", views.PaymentDone.as_view(), name="payment_done"),
+    path('show_sessions/',views.ShowSession.as_view(),name='sessions'),
+    path('before_checkout/',views.BeforeCheck.as_view(),name='before_checkout'),
 
 
 

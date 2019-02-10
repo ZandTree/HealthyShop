@@ -6,20 +6,10 @@ from django.urls import reverse
 
 from country.models import Country, State, City
 
-class Guest_Profile(models.Model):
-    """ Profile for quest user """
-    email = models.EmailField()
-    active = models.BooleanField(default=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return 'guest email: {}'.format(self.email)
-
 
 
 class Profile(models.Model):
-    """Profile for auth user"""
+    """Профиль пользователя"""
     user = models.OneToOneField(
         User,
         verbose_name="Пользователь",

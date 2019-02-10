@@ -3,6 +3,7 @@ from django.db import models
 
 class Country(models.Model):
     """Country model"""
+    # country code
     sortname = models.CharField(max_length=3)
     name = models.CharField(max_length=150)
     phonecode = models.IntegerField()
@@ -14,6 +15,9 @@ class Country(models.Model):
 class State(models.Model):
     """State model"""
     name = models.CharField(max_length=30)
+    # страна,к которой принадлежит область\штат
+    # list(tuples,) tuple=(id in list,'afkorting','fulle name','code')
+    # (155, 'NL', 'Netherlands The', 31),
     country_id = models.IntegerField()
 
     def __str__(self):

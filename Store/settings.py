@@ -91,12 +91,12 @@ WSGI_APPLICATION = 'Store.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 #
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
 
 
 # Password validation
@@ -162,8 +162,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 MY_INFO = 80
 MESSAGE_LEVEL = MY_INFO
 
-
-try:
-    from .local_settings import *
-except ImportError:
-    from .prod_settings import *
+#
+# try:
+#     from .local_settings import *
+# except ImportError:
+#     from .prod_settings import *
